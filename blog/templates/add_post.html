@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load form_tags static %}
-
+{{ form.media }}
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">Add New Blog Post</h2>
@@ -49,11 +49,27 @@
         <button type="submit" class="btn btn-primary w-100">Add Post</button>
     </form>
 </div>
-   <script>
-    ClassicEditor
-        .create(document.querySelector('#id_content'))
-        .catch(error => {
-            console.error(error);
-        });
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new FroalaEditor('#id_content', {
+    toolbarButtons: [
+         'paragraphFormat', '|', 'bold', 'italic', 'underline', 'strikeThrough', '|',
+        'align', 'formatOL', 'formatUL', '|', 'insertLink', 'insertImage', 'insertTable', '|',
+        'html', 'fullscreen',
+    ],
+    paragraphFormat: {
+        N: 'Normal Text',
+        H1: 'Heading 1',
+        H2: 'Heading 2',
+        H3: 'Heading 3',
+        H4: 'Heading 4',
+    },
+    height: 400,
+    placeholderText: 'Write something amazing...',
+});
+
+        // Initialize Froala Editor
+
+    });
 </script>
 {% endblock %}

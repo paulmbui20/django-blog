@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'dist/ckeditor5-editor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/froala_editor.css' %}">
+    <link rel="stylesheet" href="{% static 'css/froala_style.css' %}">
 </head>
 <body>
 {% include 'navbar.html' %}
@@ -21,8 +22,12 @@
     <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-{#<script src="{% static 'dist/ckeditor5.js' %}"></script>#}
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-
+<script src="{% static 'js/froala_editor.min.js' %}"></script>
+<script src="{% static 'plugins/paragraph_format.min.js' %}"></script>
+<script src="{% static 'plugins/paragraph_style.min.js' %}"></script>
+    <script src="{% static 'plugins/link.min.js' %}"></script>
+    <script src="{% static 'plugins/table.min.js' %}"></script>
+    <script src="{% static 'plugins/lists.min.js' %}"></script>
+    <script src="{% static 'plugins/image.min.js' %}"></script>
 </body>
 </html>

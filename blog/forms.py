@@ -1,6 +1,6 @@
 from django import forms
 from .models import BlogPost, Category
-from dal import autocomplete
+from froala_editor.widgets import FroalaEditor
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -10,7 +10,7 @@ class CategoryForm(forms.ModelForm):
 
 
 class BlogPostForm(forms.ModelForm):
-    content = forms.CharField()
+    content = forms.CharField(widget=FroalaEditor)
     class Meta:
         model = BlogPost
         fields = ['title', 'featured_image', 'content', 'categories']
@@ -18,5 +18,5 @@ class BlogPostForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'featured_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'categories': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'}),
+            'categories': forms.Select(attrs={'class': 'form-select'}),
         }
