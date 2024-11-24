@@ -10,30 +10,35 @@
  <!-- Search Bar -->
 {% include 'search_bar.html' %}
  </div>
-    <div class="container">
-    <div class="row">
+<div class="container">
+    <div class="row d-flex flex-wrap">  <!-- Use flexbox here -->
         <div class="col-md-10">
-            {% for post in posts %}
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ post.slug }}/">{{ post.title }}</a>
-                </h5>
-                <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
-                <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
+            <div class="row row-cols-1 row-cols-md-3"> <!-- Bootstrap grid with 3 columns per row -->
+                {% for post in posts %}
+                    <div class="col mb-4"> <!-- Individual card column inside flex -->
+                        <div class="card"> <!-- h-100 ensures the card takes full height -->
+                            <img src="{{ post.featured_image.url }}"
+                                 class="card-img-top" alt="{{ post.title }}"
+                                 style="width: 100%;
+                                 aspect-ratio: 1/1;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ post.slug }}/">{{ post.title }}</a>
+                                </h5>
+                                <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
+                                <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
-    {% endfor %}
-        </div>
-    <div class="col-md-2">
-        {% include 'sidebar.html' %}
-    </div>
 
+        <div class="col-md-2">
+            {% include 'sidebar.html' %}
+        </div>
     </div>
-    </div>
+</div>
 
 
 {% endblock %}

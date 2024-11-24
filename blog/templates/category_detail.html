@@ -12,7 +12,8 @@
         <div class="card mb-4">
             <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}">
             <div class="card-body">
-                <h5 class="card-title">{{ post.title }}</h5>
+                <h5 class="card-title"><a href="/posts/{{ post.slug }}/">{{ post.title }}</a></h5>
+
                 <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
                 <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
             </div>
