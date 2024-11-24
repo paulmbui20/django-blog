@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load form_tags static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Add New Blog Post</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="border p-4 rounded">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <!-- Title -->
+        <div class="form-group mb-3">
+            <label for="id_title">Title</label>
+            {{ form.title|add_class:"form-control" }}
+            {% for error in form.title.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Featured Image -->
+        <div class="form-group mb-3">
+            <label for="id_featured_image">Featured Image</label>
+            {{ form.featured_image|add_class:"form-control" }}
+            {% for error in form.featured_image.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Content -->
+        <div class="form-group mb-3">
+            <label for="id_content">Content</label>
+            {{ form.content|add_class:"form-control" }}
+            {% for error in form.content.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Categories -->
+        <div class="form-group mb-3">
+            <label for="id_categories">Categories</label>
+            {{ form.categories }}
+            {% for error in form.categories.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Add Post</button>
+    </form>
+</div>
+   <script>
+    ClassicEditor
+        .create(document.querySelector('#id_content'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+{% endblock %}

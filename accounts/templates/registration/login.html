@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load form_tags %}
+{% block content %}
+<main class="form-signin w-50 m-auto p-5">
+  <form method="POST">
+    {% csrf_token %}
+    <h1 class="h3 mb-3 text-center fw-normal">Django Blog Log in</h1>
+
+  <!-- Display non-field errors -->
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger m-3">
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="form-floating m-3">
+      {{ form.username|add_class:"form-control" }}
+      <label for="id_username">User Name</label>
+    </div>
+    <div class="form-floating m-3">
+      {{ form.password|add_class:"form-control" }}
+      <label for="id_password">Password</label>
+    </div>
+
+    <div class="text-start m-3">
+      <a href="#">Forgot password?</a>
+    </div>
+    <button class="btn btn-primary w-50 m-3 py-2" type="submit">Log in</button>
+    <span>No account?</span>
+    <a href="{% url 'register' %}" class="fw-bold">Sign up</a>
+    <p class="mt-5 mb-3 text-center text-body-secondary">&copy; 2023–2024</p>
+  </form>
+</main>
+{% endblock %}

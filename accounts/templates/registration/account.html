@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="text-center w-50 m-auto p-5">
+    <h1 class="h3 mb-3 fw-normal">Welcome to your Account Page</h1>
+    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
+<table class="table table-bordered" id="postsTable">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.title }}</td>
+            <td>{{ post.get_status_display }}</td>
+            <td>
+                <!-- View Button -->
+                <a class="btn btn-outline-success btn-sm" href="/posts/{{post.slug}}/">View post</a>
+                <!-- Edit Button -->
+                <a href="{% url 'edit_post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+
+                <!-- Delete Button -->
+                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ post.id }}">Delete</button>
+            </td>
+        </tr>
+
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal-{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete "{{ post.title }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="POST" action="{% url 'delete_post' post.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</main>
+{% endblock %}

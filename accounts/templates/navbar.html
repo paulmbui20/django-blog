@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-black">
+  <div class="container">
+    <a class="navbar-brand" href="/">Django Blog</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'blogpost_list' %}">Articles</a>
+        </li>
+      </ul>
+        <div class="dropdown ms-auto">
+            <button class="btn btn-outline-success btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user" style="font-size: 1.7rem"></i>
+            </button>
+            <ul class="dropdown-menu my-3">
+                {% if user.is_authenticated %}
+              <li><a class="dropdown-item" href="{% url 'account' %}">Dashboard</a></li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+              <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+              <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+          </div>
+    </div>
+  </div>
+</nav>

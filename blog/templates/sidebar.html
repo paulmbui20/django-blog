@@ -1,0 +1,16 @@
+<!-- sidebar.html -->
+<div id="sidebar">
+  <span class="h5">Categories</span>
+  <ul>
+    {% for category in categories %}
+      <li><a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Recent Posts</h5>
+  <ul>
+    {% for post in recent_posts %}
+      <li><a href="/posts/{{ post.slug }}/">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>

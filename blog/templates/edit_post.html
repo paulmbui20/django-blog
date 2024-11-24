@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load form_tags static %}
+
+{% block content %}
+<main class="form-container w-75 mx-auto p-4 border rounded">
+    <h2 class="text-center mb-4">Edit Blog Post</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <!-- Title -->
+        <div class="form-group mb-3">
+            <label for="id_title" class="form-label">Title</label>
+            {{ form.title|add_class:"form-control" }}
+            {% for error in form.title.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Featured Image -->
+        <div class="form-group mb-3">
+            <label for="id_featured_image" class="form-label">Featured Image</label>
+            {{ form.featured_image }}
+            {% for error in form.featured_image.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Content (CKEditor) -->
+        <div class="form-group mb-3">
+            <label for="id_content" class="form-label">Content</label>
+            {{ form.content }}
+            {% for error in form.content.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Categories -->
+        <div class="form-group mb-3">
+            <label for="id_categories" class="form-label">Categories</label>
+            {{ form.categories }}
+            {% for error in form.categories.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Update</button>
+    </form>
+
+</main>
+{% endblock %}
