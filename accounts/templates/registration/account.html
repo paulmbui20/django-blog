@@ -19,6 +19,8 @@
         <tr>
             <th>Title</th>
             <th>Status</th>
+            <th>Author</th>
+            <th>Created at</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -27,6 +29,8 @@
         <tr>
             <td>{{ post.title }}</td>
             <td>{{ post.get_status_display }}</td>
+            <td>{{ post.author }}</td>
+            <td>{{ post.created_at }}</td>
             <td>
                 <!-- View Button -->
                 <a class="btn btn-outline-success btn-sm" href="/posts/{{post.slug}}/">View post</a>
@@ -66,4 +70,19 @@
 
 
 </main>
+<script src="../../static/js/jquery-3.6.0.min.js"></script>
+<script src="../../static/js/datatables.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#postsTable').DataTable({
+        "searching": true,
+        "ordering": true,
+        "lengthChange": false,
+        "pageLength": 5,
+        "order": [[3, 'des']],
+        responsive: true
+    });
+});
+</script>
+
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
+from accounts.models import CustomUser
 from .forms import BlogPostForm
 from .models import BlogPost, Category
 from django.http import JsonResponse, HttpResponseRedirect
@@ -131,5 +132,4 @@ def delete_post(request, post_id):
         return HttpResponseRedirect(reverse('account'))
 
     return render(request, 'registration/account.html', {'post': post})
-
 

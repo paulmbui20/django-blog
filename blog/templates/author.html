@@ -1,0 +1,61 @@
+{% extends 'blog_base.html' %}
+
+
+{% block title %}Blog Posts{% endblock %}
+
+{% block content %}
+<div class="container my-2">
+    <nav aria-label="breadcrumb">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        {% for breadcrumb in breadcrumbs %}
+            {% if not forloop.last %}
+                <li class="breadcrumb-item">
+                    <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
+                </li>
+            {% else %}
+                <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.name }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+</div>
+
+
+
+    <div class="container text-center my-3"><h1>{{ author.username }}'s posts</h1></div>
+ <div class="container w-50 m-auto">
+ <!-- Search Bar -->
+{% include 'search_bar.html' %}
+ </div>
+<div class="container">
+    <div class="row d-flex flex-wrap">  <!-- Use flexbox here -->
+        <div class="col-md-12">
+            <div class="row row-cols-1 row-cols-md-3"> <!-- Bootstrap grid with 3 columns per row -->
+                {% for post in posts %}
+                    <div class="col mb-4"> <!-- Individual card column inside flex -->
+                        <div class="card"> <!-- h-100 ensures the card takes full height -->
+                            <img src="{{ post.featured_image.url }}"
+                                 class="card-img-top" alt="{{ post.title }}"
+                                 style="width: 100%;
+                                 aspect-ratio: 1/1;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="/posts/{{ post.slug }}/">{{ post.title }}</a>
+                                </h5>
+                                <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
+                                <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+

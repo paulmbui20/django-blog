@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import CustomUser
 from django.contrib import messages
 
 from blog.models import BlogPost
@@ -22,25 +23,6 @@ def register(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
-
-
-# def login_view(request):
-#     if request.method == "POST":
-#         form = CustomAuthenticationForm(data=request.POST)
-#         if form.is_valid():
-#             username_or_email = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(
-#                 request,
-#                 username=username_or_email,
-#                 password=password
-#             )
-#             if user:
-#                 login(request, user)
-#                 return redirect('account')
-#     else:
-#         form = CustomAuthenticationForm()
-#     return render(request, 'registration/login.html', {'form': form})
 
 def login_view(request):
     if request.method == "POST":
@@ -76,3 +58,26 @@ def account(request):
     else:
         posts = BlogPost.objects.filter(author=request.user)
     return render(request, 'registration/account.html', {'posts': posts})
+
+
+@login_required
+def update_password(request):
+    pass
+
+@login_required
+def profile(request):
+    pass
+
+@login_required
+def update_image(request):
+    pass
+
+@login_required
+def delete_image(request):
+    pass
+
+@login_required
+def profile_edit(request):
+    user = request.user
+    pass
+

@@ -52,3 +52,45 @@ class CustomAuthenticationForm(AuthenticationForm):
         'placeholder': 'Password',
         'id': 'floatingPassword',
     }))
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'website', 'gender'  ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name',
+                'id': 'floatingFirstName',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name',
+                'id': 'floatingLastName',
+            }),
+            'username': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Username',
+                'id': 'floatingUsername',
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Email',
+                'id': 'floatingEmail',
+            }),
+            'bio': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Bio',
+                'id': 'floatingBio',
+            }),
+            'website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Website',
+                'id': 'floatingWebsite',
+            }),
+            'gender': forms.Select(attrs={
+                'class': 'form-select',
+                'placeholder': 'Gender',
+                'id': 'floatingGender',
+            })
+        }
