@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from django.urls.conf import include
 
@@ -10,4 +12,4 @@ urlpatterns = [
     path('<slug:slug>/', BlogPostDetailView, name='blogpost_detail'),
     path('category/<slug:slug>/', category_view, name='category_detail'),
     path('froala_editor/', include('froala_editor.urls')),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

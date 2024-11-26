@@ -7,8 +7,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.TextField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=10, null=True, blank=True, choices=(('M', 'Male'), ('F', 'Female')))
-    image = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    image = models.ImageField(upload_to="profile_pictures/", null=True, blank=True, default="profile_pictures/default.jpg")
     website = models.URLField(max_length=65, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     slug = models.SlugField(max_length=65, unique=True, null=True, blank=True)
     def save(self, *args, **kwargs):
         if not self.slug:

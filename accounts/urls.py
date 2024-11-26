@@ -1,10 +1,12 @@
 import profile
 
+from django.conf.urls.static import static
 from django.urls import path
 
 from blog import views
-from blog.views import add_post
-from .views import register, account, logout_view, update_password, update_image, delete_image, profile_edit, profile
+from blog.views import add_post, update_post_status
+from djangoBlog import settings
+from .views import register, account, logout_view, update_password, update_image, delete_image, profile
 from django.contrib.auth import views as auth_views
 
 
@@ -18,9 +20,10 @@ urlpatterns = [
     path('add/', add_post, name='add_post'),
 
     path('profile/',profile, name='profile'),
-    path('profile/edit/<int:user_id>', profile_edit, name='profile_edit'),
-    path('profile/update-password/<int:user_id>/', update_password, name='update_password'),
-    path('profile/update-image/<int:user_id>/', update_image, name='update_image'),
-    path('profile/delete-image/<int:user_id>/', delete_image, name='delete_image'),
+    path('profile/update-password/', update_password, name='update_password'),
+    path('profile/update-image/', update_image, name='update_image'),
+    path('profile/delete-image/', delete_image, name='delete_image'),
+
+    path('update_post_status/', update_post_status, name='update_post_status'), # New URL pattern
 
 ]

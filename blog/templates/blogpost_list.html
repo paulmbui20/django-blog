@@ -1,11 +1,12 @@
 {% extends 'blog_base.html' %}
+{% load static %}
 
 {% block title %}Blog Posts{% endblock %}
 
 {% block content %}
 {% include 'breadcrumb.html' %}
 
-    <div class="container text-center my-3"><h1>Blog Posts</h1></div>
+    <div class="container text-center"><h1>Blog Posts</h1></div>
  <div class="container w-50 m-auto">
  <!-- Search Bar -->
 {% include 'search_bar.html' %}
@@ -13,7 +14,7 @@
 <div class="container">
     <div class="row d-flex flex-wrap">  <!-- Use flexbox here -->
         <div class="col-md-10">
-            <div class="row row-cols-1 row-cols-md-3"> <!-- Bootstrap grid with 3 columns per row -->
+            <div class="row row-cols-1 row-cols-md-4"> <!-- Bootstrap grid with 3 columns per row -->
                 {% for post in posts %}
                     <div class="col mb-4"> <!-- Individual card column inside flex -->
                         <div class="card"> <!-- h-100 ensures the card takes full height -->
@@ -22,11 +23,26 @@
                                  style="width: 100%;
                                  aspect-ratio: 1/1;">
                             <div class="card-body">
+                                <div class="d-flex align-items-center bg-success-subtle p-1">
+                                    {% if post.author.image %}
+                                        <img src="{{ post.author.image.url }}"
+                                             alt="{{ post.author.username }}"
+                                             class="rounded-circle"
+                                             style="width: 40px; height: 40px; margin-right: 10px;">
+                                    {% else %}
+                                        <img src="{% static 'default-profile.jpg' %}"
+                                             alt="{{ post.author.username }}"
+                                             class="rounded-circle"
+                                             style="width: 40px; height: 40px; margin-right: 10px;">
+                                    {% endif %}
+                                    <a href="{% url 'author' post.author.username %}">
+                                        {{ post.author.username }}</a>
+                                </div>
                                 <h5 class="card-title">
-                                    <a href="{{ post.slug }}/">{{ post.title }}</a>
+                                    <a class="text-decoration-none" href="{{ post.slug }}/">
+                                        {{ post.title|truncatewords:5 }}</a>
                                 </h5>
-                                <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
-                                <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
+                                <p class="card-text">{{ post.content|truncatewords:9|safe }}</p>
                             </div>
                         </div>
                     </div>

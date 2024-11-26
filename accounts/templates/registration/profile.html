@@ -2,16 +2,19 @@
 
 {% block content %}
 
-    <div class="container rounded bg-white mt-5 mb-5">
+    <div class="container rounded bg-white mt-3 mb-5">
         <div class="row">
             <div class="col-md-10">
                 <div class="row">
                     <div class="p-3 col-md-4 border-right">
                         <label for="profileimage" class="h3 labels">Profile Image</label>
-{#                        <img id="profileimage"#}
-{#                             class="rounded-circle mt-3"#}
-{#                             width="50%"#}
-{#                             src="{{ user.image.url }}">#}
+                       <img
+    id="profileimage"
+    class="rounded-circle mt-3"
+    width="50%"
+    src="{% if user.image %}{{ user.image.url }}{% else %}/static/default-profile.jpg{% endif %}"
+    alt="Profile Image">
+
                         <div class="mt-2">
                             <button type="button" class="btn btn-sm btn-outline-primary" id="updateImageBtn">
                                 <i class="bi bi-pencil-square"></i> Update Image
@@ -24,14 +27,72 @@
 
                     <div class="d-flex flex-column p-3 col-md-8">
                         <h3>Update Details</h3>
-                        <form method="post" enctype="multipart/form-data">
+    <form method="post" novalidate id="profileEditForm">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row d-flex flex-row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                    {{ form.first_name.errors }}
+                </div>
+                </div>
+            <div class="col-md-6">
+                <div class=" mb-3">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                    {{ form.last_name.errors }}
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex form-row">
+            <div class="col-md-6">
+                <div class=" mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex form-row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {{ form.phone.errors }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class=" mb-3">
+                    {{ form.website.label_tag }}
+                    {{ form.website }}
+                    {{ form.website.errors }}
+                </div>
+            </div>
+        </div>
+        <div class=" mb-3">
+            {{ form.gender.label_tag }}
+            {{ form.gender }}
+            {{ form.gender.errors }}
+        </div>
+        <div class=" mb-3">
+            {{ form.bio.label_tag }}
+            {{ form.bio }}
+            {{ form.bio.errors }}
+        </div>
 
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <input type="submit" class="btn btn-primary">
-                        </form>
+
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
                     </div>
-                    <small class="text-danger"></small>
                 </div>
             </div>
             <div class="col-md-2 p-3">
@@ -50,6 +111,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="passwordForm" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
                         <div class="mb-3">
                             <label for="password" class="form-label">Old Password</label>
                             <input type="password" name="password" class="form-control" id="password">
@@ -80,6 +143,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="imageForm" enctype="multipart/form-data">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
                         <div class="mb-3">
                             <label for="image" class="form-label">Choose Image</label>
                             <input type="file" name="image" class="form-control" id="image" required>
@@ -97,125 +162,132 @@
     <script  src="../../static/js/jquery-3.6.0.min.js"></script>
     <script src="../../static/js/sweetalert.js"></script>
         <script>
+        $('#profileEditForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "profile" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    Swal.fire('Success!', 'Profile updated successfully.', 'success')
+                        .then(() => location.reload());
+                },
+                error: function() {
+                    Swal.fire('Error!', 'Failed to update profile.', 'error');
+                }
+            });
+        });
+
         $(document).ready(function() {
             $('#passwordForm').on('submit', function(e) {
-                e.preventDefault(); // Prevent the default form submission
+                e.preventDefault();
                 $.ajax({
                     type: 'POST',
-                    url: 'update-password',
+                    url: '{% url "update_password" %}',  // Use Django URL tags
                     data: $(this).serialize(),
-                    dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message + ' You will be logged out.',
-                                icon: 'success'
-                            }).then(() => {
-                                window.location.href = 'logout.php'; // Implement your logout logic here
-                            });
+                            Swal.fire('Success!', response.message, 'success')
+                                .then(() => window.location.href = '{% url "logout" %}');
                         } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: response.message,
-                                icon: 'error'
-                            });
+                            Swal.fire('Error!', response.message, 'error');
                         }
                     },
                     error: function() {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred while updating your password.',
-                            icon: 'error'
-                        });
+                        Swal.fire('Error!', 'An unexpected error occurred.', 'error');
                     }
                 });
             });
-    // Handle image update
+
+
+            // Handle image update
     $('#updateImageBtn').on('click', function() {
         $('#updateImageModal').modal('show');
     });
 
-    $('#imageForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
-        var formData = new FormData(this);
-        $.ajax({
-            type: 'POST',
-            url: 'update-image', // Create this file to handle the image upload
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success'
-                    }).then(() => {
-                        location.reload(); // Reload the page to reflect changes
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message,
-                        icon: 'error'
-                    });
-                }
-            },
-            error: function() {
+$('#imageForm').on('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission
+    var formData = new FormData(this);
+    $.ajax({
+        type: 'POST',
+        url: '{% url "update_image" %}', // Ensure this matches your URL pattern
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: response.message,
+                    icon: 'success'
+                }).then(() => {
+                    location.reload(); // Reload the page to reflect changes
+                });
+            } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'An error occurred while updating your image.',
+                    text: response.message,
                     icon: 'error'
                 });
             }
-        });
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while updating your image.',
+                icon: 'error'
+            });
+        }
     });
+});
 
     // Handle image delete
-    $('#deleteImageBtn').on('click', function() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'delete-image', // Create this file to handle the image deletion
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: response.message,
-                                icon: 'success'
-                            }).then(() => {
-                                location.reload(); // Reload the page to reflect changes
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: response.message,
-                                icon: 'error'
-                            });
-                        }
-                    },
-                    error: function() {
+$('#deleteImageBtn').on('click', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "delete_image" %}', // Ensure this matches your URL pattern
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: response.message,
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload(); // Reload the page to reflect changes
+                        });
+                    } else {
                         Swal.fire({
                             title: 'Error!',
-                            text: 'An error occurred while deleting the image.',
+                            text: response.message,
                             icon: 'error'
                         });
                     }
-                });
-            }
-        });
+                },
+                error: function() {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while deleting the image.',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
     });
+});
 });
     </script>
 

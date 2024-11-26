@@ -1,22 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from accounts.models import CustomUser
 from .forms import BlogPostForm
 from .models import BlogPost, Category
-from django.http import JsonResponse, HttpResponseRedirect
 
+from django.contrib.auth.decorators import user_passes_test
 
 def BlogPostListView(request):
-    posts = BlogPost.objects.all()
+    posts = BlogPost.objects.filter(status='published')  # Filter posts by status 'published'
     categories = Category.objects.all()
     years = BlogPost.objects.dates('created_at', 'year')  # Get unique years for archive links
-    recent_posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Last 5 posts
-
-    # tags = tags.objects.all()
+    recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
         {'url': '/posts/', 'name': 'Blog'}
@@ -33,12 +30,17 @@ def BlogPostListView(request):
     return render(request, 'blogpost_list.html', context)
 
 def BlogPostDetailView(request, slug):
+
     # Fetch the blog post by slug
     post = get_object_or_404(BlogPost, slug=slug)
 
+    if post.status != 'published':
+        return render(request,'unpublished.html')  # Render a placeholder for unpublished posts
+
     # Additional data
     categories = Category.objects.all()
-    recent_posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Last 5 posts
+    recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
+
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
         {'url': '/posts/', 'name': 'Blog'},
@@ -58,8 +60,8 @@ def BlogPostDetailView(request, slug):
 
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    posts = BlogPost.objects.filter(categories=category)
-    recent_posts = BlogPost.objects.all().order_by('-created_at')[:5]  # Last 5 posts
+    posts = BlogPost.objects.filter(categories=category,status='published')  # Only show published posts
+    recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
         {'url': '/posts/', 'name': 'Blog'},
@@ -75,7 +77,7 @@ def category_view(request, slug):
 def search_posts(request):
     query = request.GET.get('q', '').strip()
     if query:
-        results = BlogPost.objects.filter(title__icontains=query).values('id', 'title', 'slug')
+        results = BlogPost.objects.filter(title__icontains=query, status='published').values('id', 'title', 'slug')
         return JsonResponse(list(results), safe=False)
     return JsonResponse([], safe=False)  # Return an empty list if no query
 
@@ -133,3 +135,17 @@ def delete_post(request, post_id):
 
     return render(request, 'registration/account.html', {'post': post})
 
+
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def update_post_status(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        new_status = request.POST.get('new_status')
+        try:
+            post = BlogPost.objects.get(id=post_id)
+            post.status = new_status
+            post.save()
+            return JsonResponse({'message': 'Status updated successfully!'}, status=200)
+        except BlogPost.DoesNotExist:
+            return JsonResponse({'message': 'Post not found!'}, status=404)
+    return JsonResponse({'message': 'Invalid request method!'}, status=400)

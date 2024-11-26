@@ -28,8 +28,24 @@
         {% for post in posts %}
         <tr>
             <td>{{ post.title }}</td>
-            <td>{{ post.get_status_display }}</td>
-            <td>{{ post.author }}</td>
+
+            <td> {% if request.user.is_superuser or request.user.is_staff %}
+                <select class="form-select status-select" data-post-id="{{ post.id }}">
+                    {% for key, value in post.STATUS_CHOICES %}
+                        <option value="{{ key }}" {% if post.status == key %}selected{% endif %}>
+                            {{ value }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                {{ post.get_status_display }}
+            {% endif %}
+            </td>
+
+            <td>
+                <a href="{% url 'author' post.author.username %}">{{ post.author }}</a>
+
+            </td>
             <td>{{ post.created_at }}</td>
             <td>
                 <!-- View Button -->
@@ -81,6 +97,24 @@ $(document).ready(function() {
         "pageLength": 5,
         "order": [[3, 'des']],
         responsive: true
+    });
+    $('.status-select').change(function() {
+        var postId = $(this).data('post-id');
+        var newStatus = $(this).val();
+        $.ajax({
+            url: '{% url "update_post_status" %}',
+            type: 'POST',
+            data: {
+                'post_id': postId,
+                'new_status': newStatus,
+                'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            success: function(response) {
+                alert('Status updated successfully!'
+                );
+                }, error: function(response) {
+                alert('An error occurred while updating the status.');
+            }
+        });
     });
 });
 </script>

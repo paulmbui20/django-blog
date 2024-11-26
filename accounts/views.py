@@ -1,3 +1,7 @@
+import os
+
+from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
@@ -7,8 +11,7 @@ from .models import CustomUser
 from django.contrib import messages
 
 from blog.models import BlogPost
-from .forms import CustomUserCreationForm, CustomAuthenticationForm
-
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm
 
 
 def register(request):
@@ -60,24 +63,78 @@ def account(request):
     return render(request, 'registration/account.html', {'posts': posts})
 
 
+
 @login_required
 def update_password(request):
-    pass
+    if request.method == "POST":
+        old_password = request.POST.get("password")
+        new_password = request.POST.get("newpassword")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            return JsonResponse({"success": False, "message": "Passwords do not match."})
+
+        if not request.user.check_password(old_password):
+            return JsonResponse({"success": False, "message": "Old password is incorrect."})
+
+        request.user.set_password(new_password)
+        request.user.save()
+
+        # Keep the user logged in after changing the password
+        update_session_auth_hash(request, request.user)
+
+        return JsonResponse({"success": True, "message": "Password updated successfully."})
+
+    return JsonResponse({"success": False, "message": "Invalid request."})
+
 
 @login_required
 def profile(request):
-    pass
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile')  # Redirect to the profile page
+    else:
+        form = ProfileForm(instance=user)
+    profile_image_url = user.image.url if user.image else '/static/default-profile.jpg'
+
+    return render(request, 'registration/profile.html', {
+        'user': user,
+        'profile_image_url': profile_image_url,
+        'form': form
+    })
+
 
 @login_required
 def update_image(request):
-    pass
+    if request.method == 'POST' and request.FILES.get('image'):
+        user = request.user
+        image = request.FILES['image']
+        user.image = image
+        user.save()
+        return JsonResponse({'success': True, 'message': 'Profile image updated successfully.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request or no image provided.'}, status=400)
 
 @login_required
 def delete_image(request):
-    pass
+    if request.method == 'POST':
+        user = request.user
+        if user.image:  # Check if the user has an image
+            try:
+                # Remove the file from storage
+                if os.path.isfile(user.image.path):
+                    os.remove(user.image.path)
+                # Clear the image field in the database
+                user.image = None
+                user.save()
+                return JsonResponse({'success': True, 'message': 'Profile image deleted successfully.'})
+            except Exception as e:
+                return JsonResponse({'success': False, 'message': f'Error deleting image: {str(e)}'}, status=500)
+        else:
+            return JsonResponse({'success': False, 'message': 'No profile image to delete.'}, status=400)
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
 
-@login_required
-def profile_edit(request):
-    user = request.user
-    pass
 
