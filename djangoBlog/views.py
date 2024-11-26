@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.models import CustomUser
-from blog.models import BlogPost
+from blog.models import BlogPost, Category
 
 from django.contrib.auth import get_user_model
 
 def index(request):
-    return render(request, 'index.html')
+    recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]
+    categories = Category.objects.all()[:4]
+    context = { 'recent_posts': recent_posts, 'categories': categories, }
+    return render(request, 'index.html', context)
+
 
 CustomUser = get_user_model()
 def author(request, slug):
