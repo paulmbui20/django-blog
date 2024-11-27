@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Authors{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Authors</h1>
+    </div>
+    <div class="row g-4">
+        {% for author in author_details %}
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    {% if author.image %}
+                        <img src="{{ author.image.url }}" class="card-img-top" alt="{{ author.username }}" style="height: 200px; object-fit: contain;">
+                    {% else %}
+                        <img src="{% static 'default-profile.jpg' %}" class="card-img-top" alt="{{ author.username }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                        <a href="/author/{{ author.username }}/" class="text-decoration-none">
+                           {{ author.first_name }} {{ author.last_name }}{% if not author.first_name and not author.last_name %}{{ author.username }}{% endif %}
+                        </a>
+                        </h5>
+                        <p class="card-text">{{ author.bio|truncatewords:10 }}</p>
+                        {% if author.website %}
+                            <a href="{{ author.website }}" class="text-decoration-none text-primary" target="_blank">Website</a>
+                        {% endif %}
+                        <p class="mt-2">Published Posts:<strong>{{ author.post_count }}</strong> </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -14,6 +14,12 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'blogpost_list' %}">Articles</a>
         </li>
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'category_list' %}">Categories</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'authors_list' %}">Authors</a>
+        </li>
       </ul>
         <div class="dropdown ms-auto">
             <button class="btn btn-outline-success btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -23,6 +29,7 @@
                 {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url 'account' %}">Dashboard</a></li>
               <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_post' %}">Write a Post</a></li>
               <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
               <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>

@@ -33,3 +33,46 @@ def author(request, slug):
 
     }
     return render(request, 'author.html', context)
+
+
+def authors_list_view(request):
+    authors = CustomUser.objects.all()
+    author_details = []
+
+    for author in authors:
+        author_posts = BlogPost.objects.filter(author=author, status='published').count()
+        if author_posts >= 1:  # Only list authors with more 1 or more  published post
+            author_details.append({
+                'username': author.username,
+                'first_name': author.first_name,
+                'last_name': author.last_name,
+                'bio': author.bio,  # Assuming bio is in the profile
+                'website': author.website,  # Assuming website is in the profile
+                'image': author.image,  # Assuming picture is in the profile
+                'post_count': author_posts
+            })
+
+    context = {
+        'author_details': author_details,
+    }
+    return render(request, 'authors_list.html', context)
+
+def category_list_view(request):
+    categories = Category.objects.all()
+    category_details = []
+
+    for category in categories:
+        post_count = BlogPost.objects.filter(categories=category, status='published').count()
+        if post_count > 0:  # Only include categories with at least one published post
+            category_details.append({
+                'name': category.name,
+                'slug': category.slug,
+                'post_count': post_count,
+                'description': category.description,
+                'category_image': category.categoryImage,
+            })
+
+    context = {
+        'category_details': category_details,
+    }
+    return render(request, 'category_list.html', context)

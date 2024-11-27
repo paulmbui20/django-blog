@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1>Categories</h1>
+    </div>
+    <div class="row g-4">
+        {% for category in category_details %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    {% if category.category_image %}
+                        <img src="{{ category.category_image.url }}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'placeholder-image.jpg' %}" class="card-img-top" alt="{{ category.name }}" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{% url 'category_detail' category.slug %}" class="text-decoration-none text-dark">{{ category.name }}</a>
+                        </h5>
+                        <p class="card-text">{{ category.description|truncatewords:20 }}</p>
+                        <p class="mt-2">Published Posts: <strong>{{ category.post_count }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

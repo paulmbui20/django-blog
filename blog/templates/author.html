@@ -1,61 +1,57 @@
 {% extends 'blog_base.html' %}
-
+{% load static %}
 
 {% block title %}Blog Posts{% endblock %}
 
 {% block content %}
 <div class="container my-2">
     <nav aria-label="breadcrumb">
-    <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        {% for breadcrumb in breadcrumbs %}
-            {% if not forloop.last %}
-                <li class="breadcrumb-item">
-                    <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
-                </li>
-            {% else %}
-                <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.name }}</li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-</nav>
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% for breadcrumb in breadcrumbs %}
+                {% if not forloop.last %}
+                    <li class="breadcrumb-item">
+                        <a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.name }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
 </div>
 
+<div class="container text-center my-2">
+    <h1>{{ author.username }}'s Posts</h1>
+</div>
 
+<div class="container w-50 m-auto my-2">
+    <!-- Search Bar -->
+    {% include 'search_bar.html' %}
+</div>
 
-    <div class="container text-center my-3"><h1>{{ author.username }}'s posts</h1></div>
- <div class="container w-50 m-auto">
- <!-- Search Bar -->
-{% include 'search_bar.html' %}
- </div>
 <div class="container">
-    <div class="row d-flex flex-wrap">  <!-- Use flexbox here -->
-        <div class="col-md-12">
-            <div class="row row-cols-1 row-cols-md-3"> <!-- Bootstrap grid with 3 columns per row -->
-                {% for post in posts %}
-                    <div class="col mb-4"> <!-- Individual card column inside flex -->
-                        <div class="card"> <!-- h-100 ensures the card takes full height -->
-                            <img src="{{ post.featured_image.url }}"
-                                 class="card-img-top" alt="{{ post.title }}"
-                                 style="width: 100%;
-                                 aspect-ratio: 1/1;">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="/posts/{{ post.slug }}/">{{ post.title }}</a>
-                                </h5>
-                                <p class="card-text">{{ post.content|truncatewords:30|safe }}</p>
-                                <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary">Read More</a>
-                            </div>
+    <div class="row g-4">
+        {% for post in posts %}
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm">
+                    <div class="position-relative">
+                        <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-img-overlay d-flex align-items-start justify-content-end p-2">
+                            <div class="bg-dark text-white rounded-pill px-2 py-1">{{ post.created_at|date:"M d, Y" }}</div>
                         </div>
                     </div>
-                {% endfor %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a class="text-decoration-none text-dark" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
+                        </h5>
+                        <p class="card-text">{{ post.content|truncatewords:15|safe }}</p>
+                        <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary mt-auto align-self-start">Read More</a>
+                    </div>
+                </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 
-
 {% endblock %}
-
-
-
