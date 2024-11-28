@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
 from accounts.models import CustomUser
 from blog.models import BlogPost, Category
@@ -51,9 +51,14 @@ def authors_list_view(request):
                 'image': author.image,  # Assuming picture is in the profile
                 'post_count': author_posts
             })
-
+    breadcrumbs = [
+        {'name': 'Home', 'url': '/'},
+        {'name': 'Articles', 'url': '/posts/'},
+        {'name': 'Authors', 'url': '/authors/'},
+    ]
     context = {
         'author_details': author_details,
+        'breadcrumbs': breadcrumbs,
     }
     return render(request, 'authors_list.html', context)
 
@@ -71,8 +76,14 @@ def category_list_view(request):
                 'description': category.description,
                 'category_image': category.categoryImage,
             })
+    breadcrumbs = [
+        {'name': 'Home', 'url': '/'},
+        {'name': 'Articles', 'url': '/posts/'},
+        {'name': 'Categories', 'url': '/categories/'},
 
+    ]
     context = {
         'category_details': category_details,
+        'breadcrumbs': breadcrumbs,
     }
     return render(request, 'category_list.html', context)

@@ -21,10 +21,9 @@ def BlogPostListView(request):
     context = {
         'posts': posts,
         'categories': categories,
-        # 'tags': tags,
-        'breadcrumbs': breadcrumbs,  # Pass breadcrumbs to the template
+        'breadcrumbs': breadcrumbs,
         'years': years,
-        'recent_posts': recent_posts,  # Last 5 posts
+        'recent_posts': recent_posts,
 
     }
     return render(request, 'blogpost_list.html', context)

@@ -27,12 +27,14 @@ class CustomUserCreationForm(UserCreationForm):
         'class': 'form-control',
         'placeholder': 'Password',
         'id': 'floatingPassword',
+        'label': 'Password',
     }))
 
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control',
         'placeholder': 'Confirm Password',
         'id': 'floatingPasswordC',
+        'label': 'Confirm Password',
     }))
 
     class Meta:

@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from accounts import views
+from blog.views import category_view
 from djangoBlog.views import index, author, authors_list_view, category_list_view
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     path('author/<slug:slug>/', author, name='author'),
     path('authors/', authors_list_view, name='authors_list'),
     path('categories/', category_list_view, name='category_list'),
+    path('category/<slug:slug>/', category_view, name='category_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,8 +6,6 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import CustomUser
 from django.contrib import messages
 
 from blog.models import BlogPost
@@ -34,7 +32,7 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
 
-            # Authenticate with username
+            # LOGIN with username
             user = authenticate(request, username=username, password=password)
 
             if user is not None:

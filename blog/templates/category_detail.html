@@ -23,19 +23,18 @@
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
+                        <div class="d-flex align-items-center mb-2">
                             {% if post.author.image %}
                                 <img src="{{ post.author.image.url }}" alt="{{ post.author.username }}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                             {% else %}
                                 <img src="{% static 'default-profile.jpg' %}" alt="{{ post.author.username }}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                             {% endif %}
-                            <a href="{% url 'author' post.author.username %}" class="text-dark text-decoration-none">{{ post.author.username }}</a>
+                            <a href="{% url 'author' post.author.username %}" class="text-decoration-none">{{ post.author.username }}</a>
                         </div>
                         <h5 class="card-title">
-                            <a class="text-decoration-none text-dark" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
+                            <a class="text-decoration-none" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
                         </h5>
                         <p class="card-text">{{ post.content|truncatewords:10|safe }}</p>
-                        <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-outline-primary mt-auto align-self-start">Read More</a>
                     </div>
                 </div>
             </div>

@@ -14,8 +14,10 @@
       <p>{{ post.content|safe }}</p>
         <p>Created at: {{ post.created_at }}</p>
       </div>
-    <div class="col-md-2">
-      {% include 'search_bar.html' %} {% include 'sidebar.html' %}
+    <div class="col-md-2 shadow-sm" >
+        <div class="sticky-top" style="top: 20px;">
+                  {% include 'search_bar.html' %} {% include 'sidebar.html' %}
+        </div>
     </div>
   </div>
 </div>

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load form_tags %}
 {% block content %}
-<main class="form-signin w-50 m-auto p-5">
+<main class="form-signin col-md-5 m-auto  p-5 shadow-lg my-5">
   <form method="POST">
     {% csrf_token %}
     <h1 class="h3 mb-3 text-center fw-normal">Django Blog Log in</h1>
 
-  <!-- Display non-field errors -->
+  <!-- non-field errors -->
     {% if form.non_field_errors %}
       <div class="alert alert-danger m-3">
         {% for error in form.non_field_errors %}
@@ -26,9 +26,9 @@
     <div class="text-start m-3">
       <a href="#">Forgot password?</a>
     </div>
-    <button class="btn btn-primary w-50 m-3 py-2" type="submit">Log in</button>
-    <span>No account?</span>
-    <a href="{% url 'register' %}" class="fw-bold">Sign up</a>
+    <button class="btn btn-sm btn-primary w-50 m-3 py-2" type="submit">Log in</button>
+    <span>OR  <a href="{% url 'register' %}" class="fw-bold">Sign up</a></span>
+
     <p class="mt-5 mb-3 text-center text-body-secondary">&copy; 2023–2024</p>
   </form>
 </main>
