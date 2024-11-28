@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% load form_tags static %}
 {{ form.media }}
+{% block title %}Add Post{% endblock %}
+
 {% block content %}
 <div class="container my-1">
     <h2 class="text-center mb-4">Add New Blog Post</h2>
 
-    <form method="POST" enctype="multipart/form-data" class="border p-4 rounded">
+    <form method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow-lg">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
