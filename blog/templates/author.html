@@ -1,8 +1,5 @@
 {% extends 'blog_base.html' %}
 {% load static %}
-
-{% block title %}Blog Posts{% endblock %}
-
 {% block content %}
 <div class="container my-2">
     <nav aria-label="breadcrumb">
@@ -30,10 +27,32 @@
     {% include 'search_bar.html' %}
 </div>
 
-<div class="container">
-    <div class="row g-4">
-        {% for post in posts %}
-            <div class="col-md-3">
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-2">
+            <!-- Author Sidebar -->
+            <div class="sticky-top" style="top: 80px;">
+                <div class="card mb-4 shadow-sm">
+                    {% if author.image %}
+                        <img src="{{ author.image.url }}" class="card-img-top" alt="{{ author.username }}">
+                    {% else %}
+                        <img src="{% static 'default-profile.jpg' %}" class="card-img-top" alt="{{ author.username }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ author.first_name }} {{ author.last_name }}{% if not author.first_name and not author.last_name %}{{ author.username }}{% endif %}</h5>
+                        <p class="card-text">{{ author.bio|truncatewords:10 }}</p>
+                        {% if author.website %}
+                            <a href="{{ author.website }}" class="text-decoration-none text-primary" target="_blank">Website</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <!-- Author's Posts -->
+            <div class="row g-4">
+                {% for post in posts %}
+            <div class="col-md-4">
                 <div class="card h-100 shadow-sm">
                     <div class="position-relative">
                         <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
@@ -46,12 +65,13 @@
                             <a class="text-decoration-none text-dark" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
                         </h5>
                         <p class="card-text">{{ post.content|truncatewords:15|safe }}</p>
-                        <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-primary mt-auto align-self-start">Read More</a>
+                        <a href="{% url 'blogpost_detail' post.slug %}" class="btn btn-outline-primary mt-auto align-self-start">Read More</a>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}

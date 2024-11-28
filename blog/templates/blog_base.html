@@ -15,34 +15,6 @@
 </header>
 
         {% block content %}{% endblock %}
-    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script>
-  $(document).ready(function() {
-      {#window.alert('hi')#}
-    $('#search').on('keyup', function() {
-      var query = $(this).val();
-      if (query.length > 2) {  // Start searching after 3 characters
-        $.ajax({
-          url: "{% url 'search_posts' %}",
-          data: {
-            'q': query
-          },
-          success: function(data) {
-            $('#search-results').html('');
-            data.forEach(function(post) {
-              $('#search-results').append('<li><a href="/posts/' + post.slug + '/">' + post.title + '</a></li>');
-            });
-          },
-            error: function() {
-            $('#search-results').html('<li>No results found</li>'); // Handle errors gracefully
-          }
-        });
-      } else {
-        $('#search-results').html('');
-      }
-    });
-  });
-</script>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
