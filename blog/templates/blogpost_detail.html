@@ -1,5 +1,8 @@
-{% extends 'blog_base.html' %} {% block title %}{{ post.title }}{% endblock %}
-{% block content %} 
+{% extends 'blog_base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block keyword %}{{ post.title }}{% endblock %}
+{% block description %}{{ post.content|safe|truncatewords:15|striptags }}{% endblock %}
+{% block content %}
 {% include 'breadcrumb.html' %}
 <div class="container my-3">
   <div class="row">
@@ -11,8 +14,8 @@
         alt="{{ post.title }}"
         width="70%"
       />
-      <p>{{ post.content|safe }}</p>
-        <p>Created at: {{ post.created_at }}</p>
+      <p>{{ post.content|safe }}</p> <br>
+        <span class="bg-warning-subtle  my-3 py-3 px-5 rounded-pill">Created at: {{ post.created_at }}</span>
       </div>
     <div class="col-md-2 shadow-sm" >
         <div class="sticky-top" style="top: 20px;">

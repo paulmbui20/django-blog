@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block title %}{{ category.name }}{% endblock %}
+{% block keyword %}{{ category.name }}{% endblock %}
+{% block description %}{{ category.description|truncatewords:15|striptags }}{% endblock %}
 
 {% block content %}
 {% include 'breadcrumb.html' %}

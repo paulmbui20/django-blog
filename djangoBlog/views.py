@@ -7,8 +7,9 @@ from django.contrib.auth import get_user_model
 
 def index(request):
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]
+    posts = BlogPost.objects.filter(status='published').order_by('-created_at')
     categories = Category.objects.all()[:4]
-    context = { 'recent_posts': recent_posts, 'categories': categories, }
+    context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts }
     return render(request, 'index.html', context)
 
 

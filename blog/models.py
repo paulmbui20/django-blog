@@ -41,5 +41,3 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
-# from blog.models import BlogPost
-# BlogPost.objects.filter(title__icontains='email')
