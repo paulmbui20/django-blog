@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -14,6 +15,11 @@ def BlogPostListView(request):
     categories = Category.objects.all()
     years = BlogPost.objects.dates('created_at', 'year')  # Get unique years for archive links
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
+
+    paginator = Paginator(posts, 16)  #pagination to show 16 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
         {'url': '/posts/', 'name': 'Blog'}
@@ -24,6 +30,7 @@ def BlogPostListView(request):
         'breadcrumbs': breadcrumbs,
         'years': years,
         'recent_posts': recent_posts,
+        'page_obj': page_obj,
 
     }
     return render(request, 'blogpost_list.html', context)
@@ -61,6 +68,11 @@ def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     posts = BlogPost.objects.filter(categories=category,status='published')  # Only show published posts
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
+
+    paginator = Paginator(posts, 16)  #pagination to show 16 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
         {'url': '/posts/', 'name': 'Blog'},
@@ -70,6 +82,7 @@ def category_view(request, slug):
         'recent_posts': recent_posts,
         'posts': posts,
         'breadcrumbs': breadcrumbs,
+        'page_obj': page_obj,
     }
     return render(request, 'category_detail.html', context)
 

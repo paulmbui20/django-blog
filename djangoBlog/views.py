@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 
 from accounts.models import CustomUser
@@ -8,8 +9,11 @@ from django.contrib.auth import get_user_model
 def index(request):
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]
     posts = BlogPost.objects.filter(status='published').order_by('-created_at')
+    paginator = Paginator(posts, 16)  #pagination to show 16 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     categories = Category.objects.all()[:4]
-    context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts }
+    context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts, 'page_obj': page_obj }
     return render(request, 'index.html', context)
 
 
@@ -52,6 +56,9 @@ def authors_list_view(request):
                 'image': author.image,  # Assuming picture is in the profile
                 'post_count': author_posts
             })
+    paginator = Paginator(authors, 16)  #pagination to show 16 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     breadcrumbs = [
         {'name': 'Home', 'url': '/'},
         {'name': 'Articles', 'url': '/posts/'},
@@ -60,6 +67,7 @@ def authors_list_view(request):
     context = {
         'author_details': author_details,
         'breadcrumbs': breadcrumbs,
+        'page_obj': page_obj,
     }
     return render(request, 'authors_list.html', context)
 
@@ -77,6 +85,9 @@ def category_list_view(request):
                 'description': category.description,
                 'category_image': category.categoryImage,
             })
+    paginator = Paginator(categories, 16)  #pagination to show 16 posts per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     breadcrumbs = [
         {'name': 'Home', 'url': '/'},
         {'name': 'Articles', 'url': '/posts/'},
@@ -86,5 +97,6 @@ def category_list_view(request):
     context = {
         'category_details': category_details,
         'breadcrumbs': breadcrumbs,
+        'page_obj': page_obj,
     }
     return render(request, 'category_list.html', context)
