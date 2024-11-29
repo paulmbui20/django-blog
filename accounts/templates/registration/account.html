@@ -1,95 +1,93 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard{% endblock %}
-
+{% load static %}
 {% block content %}
 <main class=" p-5">
 <div class="container">
     <div class="row">
         <div class="col-md-10">
-                <h1 class="h3 mb-3 fw-normal">Welcome to your Account Page</h1>
+            <h1 class="h3 mb-3 fw-normal">Welcome to your Account Page</h1>
         </div>
         <div class="col-md-2">
-    <a href="{% url 'add_post' %}" class="btn btn-outline-info"><i class="fa fa-plus-circle"></i> Add Posts</a>
+            <a href="{% url 'add_post' %}" class="btn btn-outline-info"><i class="fa fa-plus-circle"></i> Add Posts</a>
         </div>
     </div>
 </div>
 
 <div class="table-responsive">
     <table class="table table-bordered" id="postsTable">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Author</th>
-            <th>Created at</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for post in posts %}
-        <tr>
-            <td>{{ post.title }}</td>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Author</th>
+                <th>Created at</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>
+                    {% if request.user.is_superuser or request.user.is_staff %}
+                        <select class="form-select status-select {{ post.status }}" data-post-id="{{ post.id }}">
+                            {% for key, value in post.STATUS_CHOICES %}
+                                <option value="{{ key }}" {% if post.status == key %}selected{% endif %}>
+                                    {{ value }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <span class="{% if post.status == 'published' %}text-success{% elif post.status == 'pending' %}text-danger{% endif %}">
+                            {{ post.get_status_display }}
+                        </span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'author' post.author.username %}">{{ post.author }}</a>
+                </td>
+                <td>{{ post.created_at }}</td>
+                <td>
+                    <!-- View Button -->
+                    <a class="btn btn-outline-success btn-sm" href="/posts/{{post.slug}}/">View post</a>
+                    <!-- Edit Button -->
+                    <a href="{% url 'edit_post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <!-- Delete Button -->
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ post.id }}">Delete</button>
+                </td>
+            </tr>
 
-            <td> {% if request.user.is_superuser or request.user.is_staff %}
-                <select class="form-select status-select" data-post-id="{{ post.id }}">
-                    {% for key, value in post.STATUS_CHOICES %}
-                        <option value="{{ key }}" {% if post.status == key %}selected{% endif %}>
-                            {{ value }}
-                        </option>
-                    {% endfor %}
-                </select>
-            {% else %}
-                {{ post.get_status_display }}
-            {% endif %}
-            </td>
-
-            <td>
-                <a href="{% url 'author' post.author.username %}">{{ post.author }}</a>
-
-            </td>
-            <td>{{ post.created_at }}</td>
-            <td>
-                <!-- View Button -->
-                <a class="btn btn-outline-success btn-sm" href="/posts/{{post.slug}}/">View post</a>
-                <!-- Edit Button -->
-                <a href="{% url 'edit_post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
-
-                <!-- Delete Button -->
-                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ post.id }}">Delete</button>
-            </td>
-        </tr>
-
-        <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal-{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete "{{ post.title }}"?
-                    </div>
-                    <div class="modal-footer">
-                        <form method="POST" action="{% url 'delete_post' post.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal-{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete "{{ post.title }}"?
+                        </div>
+                        <div class="modal-footer">
+                            <form method="POST" action="{% url 'delete_post' post.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-    </tbody>
-</table>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-
 </main>
-<script src="../../static/js/jquery-3.6.0.min.js"></script>
-<script src="../../static/js/datatables.min.js"></script>
-        <script src="../../static/js/sweetalert.js"></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script src="{% static 'js/sweetalert.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $('#postsTable').DataTable({
@@ -97,9 +95,24 @@ $(document).ready(function() {
         "ordering": true,
         "lengthChange": false,
         "pageLength": 5,
-        "order": [[3, 'des']],
+        "order": [[3, 'desc']],
         responsive: true
     });
+
+    function updateStatusColor(element, status) {
+        element.removeClass('published pending text-success text-danger');
+        if (status === 'published') {
+            element.addClass('published text-success');
+        } else if (status === 'pending') {
+            element.addClass('pending text-danger');
+        }
+    }
+
+    $('.status-select').each(function() {
+        var status = $(this).val();
+        updateStatusColor($(this), status);
+    });
+
     $('.status-select').change(function() {
         var postId = $(this).data('post-id');
         var newStatus = $(this).val();
@@ -109,16 +122,24 @@ $(document).ready(function() {
             data: {
                 'post_id': postId,
                 'new_status': newStatus,
-                'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
             success: function(response) {
-                Swal.fire({ title: 'Success!',
+                Swal.fire({
+                    title: 'Success!',
                     text: 'Status updated successfully!',
-                    icon: 'success', confirmButtonText: 'OK'
+                    icon: 'success',
+                    confirmButtonText: 'OK'
                 });
-                }, error: function(response) {
-                Swal.fire({ title: 'Error!',
+                // Update status color
+                updateStatusColor($('select[data-post-id="' + postId + '"]'), newStatus);
+            },
+            error: function(response) {
+                Swal.fire({
+                    title: 'Error!',
                     text: 'An error occurred while updating the status.',
-                    icon: 'error', confirmButtonText: 'OK'
+                    icon: 'error',
+                    confirmButtonText: 'OK'
                 });
             }
         });
