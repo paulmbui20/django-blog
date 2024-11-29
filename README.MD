@@ -6,17 +6,20 @@ This Django-powered blog a seamless user experience for both creators and reader
 
 ### User Authentication
 - Secure registration, login, and account management.
+- Customized account dashboard with option to add or manage bio data such as profile picture, name, email, phone, bio, website, gender
+- Any addition or updated on account section are sent with jquery ajax and sweetalert 2 js is used to show response 
 
 ### Blog Post Management
-- Intuitive creation, editing, and publishing workflows.
+- Modernized creation, editing, and publishing experience.
+- Froala WYSIWYG editor for blog content field
 
-### Home Page Slider
-- Showcases the latest five approved posts.
+### Home Page Hero Section  Slider
+- A slider showing the latest five approved posts.
 
 ### Dedicated Pages
-- Blogs, authors, and categories with detailed post views.
+- Single Blog Page, authors page, single author page, categories page and single category page.
 
-### Sticky Sidebar
+### Sticky Sidebar On Single Blog Page
 - Ensures easy navigation during scrolling.
 
 ### Responsive Design
@@ -25,11 +28,12 @@ This Django-powered blog a seamless user experience for both creators and reader
 ## Technical Implementation
 
 ### Backend
-- **Django:** Robust backend for database interactions, user authentication, and application logic.
+- **Django:** backend for database interactions, user authentication, and application logic.
 
 ### Frontend
-- **HTML, CSS, and Bootstrap:** Front-end technologies for a visually appealing and responsive design.
+- **HTML, CSS, and Bootstrap:** Front-end that is visually appealing and responsive design.
 - **jQuery:** Enhances user interactions and dynamic elements.
+- **Sweetalert  2 js:** for interactive responses and messages 
 
 ## Installation
 
@@ -101,4 +105,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Django](https://www.djangoproject.com/)
 - [Bootstrap](https://getbootstrap.com/)
 - [jQuery](https://jquery.com/)
+- [Sweetalert 2 js](https://sweetalert2.github.io/)
 - [EMOBILIS](https://www.emobilis.ac.ke)
