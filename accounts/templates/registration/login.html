@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load form_tags %}
+{% load socialaccount %}
 {% block title %}login{% endblock %}
 
 {% block content %}
@@ -30,7 +31,12 @@
     </div>
     <button class="btn btn-sm btn-primary w-50 m-3 py-2" type="submit">Log in</button>
     <span>OR  <a href="{% url 'register' %}" class="fw-bold">Sign up</a></span>
-
+  <div class="text-center">
+      <p>or login with</p>
+<a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+    <i class="fa-brands fa-google"></i> Google
+      </a>
+  </div>
     <p class="mt-5 mb-3 text-center text-body-secondary">&copy; 2023–2024</p>
   </form>
 </main>
