@@ -1,30 +1,39 @@
-# Django powered Blog Platform
+# Django Powered Blog Platform
 
 This Django-powered blog a seamless user experience for both creators and readers. Key features include:
 
 ## Key Features
 
-### User Authentication
+### 1. User Authentication
 - Secure registration, login, and account management.
 - Customized account dashboard with option to add or manage bio data such as profile picture, name, email, phone, bio, website, gender
 - Any addition or updated on account section are sent with jquery ajax and sweetalert 2 js is used to show response 
-
-### Blog Post Management
+### 2 Social authentication
+-Users can log in or sign up with their google acccount instread of using password
+### 3. Blog Post Management
 - Modernized creation, editing, and publishing experience.
 - Froala WYSIWYG editor for blog content field
 
-### Home Page Hero Section  Slider
+### 4. Home Page Hero Section  Slider
 - A slider showing the latest five approved posts.
 
-### Dedicated Pages
+### 5. Dedicated Pages
 - Single Blog Page, authors page, single author page, categories page and single category page.
 
-### Sticky Sidebar On Single Blog Page
+### 6. Contact page
+- Contact page with ajax submission and sweetalert for responses
+### 7. Sticky Sidebar On Single Blog Page
 - Ensures easy navigation during scrolling.
 
-### Responsive Design
+### 8. Responsive Design
 - Optimized for various devices.
+- This is automatically handled by bootstrap css
 
+### 9. Dark mode toggle
+- The web app has a dark mode toggle button on the menu to switch from light to dark mode, to enhance user experience and accesibility. 
+- It's also an emerging trend on most websites today.
+- It also has a feature to check browser/client device mode preference and set it
+- The choice between light or dark mode whether pecked from device preference or adjusted by user is remembered and applied throughout the app even if page is reloaded
 ## Technical Implementation
 
 ### Backend
@@ -86,6 +95,22 @@ This Django-powered blog a seamless user experience for both creators and reader
 ### Blog Posts
 - **Responsive Grid:** Displays blog posts in a visually appealing grid layout.
 - **Professional Design:** Uses Bootstrap to ensure a modern and user-friendly interface.
+
+## Libraries Used
+### 1. django-froala-editor 
+### 2.  django-phonenumber-field 
+### 3.  django-allauth
+### 4.   PyJWT
+### 5.  django-unfold 
+### 6.   pillow 
+### 7.  cryptography==43.0.3
+### 8.  django-autocomplete-light==3.11.0
+### 9.  django-environ==0.11.2
+
+
+
+
+
 
 ## Contributing
 
