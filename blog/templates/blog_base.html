@@ -10,6 +10,7 @@
 <meta name="description" content="{% block description %}Homepage{% endblock %}">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -20,5 +21,7 @@
         {% block content %}{% endblock %}
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
 </body>
 </html>
