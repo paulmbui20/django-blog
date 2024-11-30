@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import BlogPostForm
+from .forms import BlogPostForm, ContactForm
 from .models import BlogPost, Category
 
 from django.contrib.auth.decorators import user_passes_test
@@ -161,3 +161,17 @@ def update_post_status(request):
         except BlogPost.DoesNotExist:
             return JsonResponse({'message': 'Post not found!'}, status=404)
     return JsonResponse({'message': 'Invalid request method!'}, status=400)
+
+
+def contactform(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success":True ,"message": "Message sent successfully!"}, status=200)
+    else:
+        return JsonResponse({"success": False, "message": "Invalid field input, check input."}, status=400)
+
+
+def contact(request):
+    return render(request, 'contact.html', {'form': ContactForm()})

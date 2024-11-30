@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.text import slugify
 from froala_editor.fields import FroalaField
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class Category(models.Model):
     name = models.CharField(max_length=65)
@@ -41,3 +43,15 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+class Contact(models.Model):
+    FirstName = models.CharField(max_length=65)
+    LastName = models.CharField(max_length=65, blank=True, null=True)
+    email = models.EmailField()
+    phone = PhoneNumberField()
+    message = models.TextField(max_length=500)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.FirstName} {self.LastName} {self.email} {self.phone} {self.message} {self.timestamp} {self.read}"

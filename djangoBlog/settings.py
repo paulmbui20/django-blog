@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    
+
+    'phonenumber_field',
+
     'accounts',
     'blog',
 ]
@@ -179,3 +181,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+PHONENUMBER_DEFAULT_REGION = 'KE'  # Default country code
+PHONENUMBER_DB_FORMAT = 'E164'    # Standardized storage format

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact {% endblock %}
+
+{% block content %}
+    <div class="container col-md-10 m-auto my-md-5 shadow-lg py-5 px-5 rounded">
+      <form id="contactForm" method="POST">
+                  {% csrf_token %}
+                  {{ form.non_field_errors }}
+        <div class="row">
+          <div class="col-md-6">
+              <div class="mb-3">
+                  {{ form.FirstName.label_tag }}
+                    {{ form.FirstName }}
+                {{ form.FirstName.errors }}
+              </div>
+              <div class="mb-3">
+                  {{ form.LastName.label_tag }}
+                    {{ form.LastName }}
+                {{ form.LastName.errors }}
+              </div>
+                <div class="mb-3">
+                          {{ form.email.label_tag }}
+                            {{ form.email }}
+                        {{ form.email.errors }}
+                </div>
+              <div class="mb-3">
+                          {{ form.phone.label_tag }}
+                            {{ form.phone }}
+                        {{ form.phone.errors }}
+                </div>
+          </div>
+          <div class="col-md-6">
+              <div class="mb-3">
+                  {{ form.message.label_tag }}
+                    {{ form.message }}
+                {{ form.message.errors }}
+                </div>
+               <input class="col-md-3 my-2 btn btn-outline-primary" type="submit" value="submit">
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+        <script  src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/sweetalert.js' %}"></script>
+        <script>
+        $('#contactForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "contactform" %}',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Success!', response.message, 'success')
+                            .then(() => location.reload());
+                    }else {
+                        Swal.fire(
+                            'Error',
+                            response.message,
+                            'error'
+                        )
+                    }
+                }
+            });
+        });
+
+        </script>
+{% endblock %}

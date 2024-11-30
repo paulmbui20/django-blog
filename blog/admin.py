@@ -1,7 +1,9 @@
+
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
-from .models import BlogPost, Category
+from .models import BlogPost, Category, Contact
+
 
 @admin.register(BlogPost)
 class BlogPostAdmin(ModelAdmin):
@@ -23,3 +25,8 @@ class CategoryAdmin(ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+@admin.register(Contact)
+class CommentAdmin(ModelAdmin):
+    list_display = ('id', 'FirstName', 'LastName', 'phone', 'email', 'message', 'timestamp', 'read')
+    search_fields = ('FirstName', 'LastName', 'message')
+    list_filter = ('read', 'timestamp')
