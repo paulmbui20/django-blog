@@ -17,3 +17,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         themeIcon.classList.toggle('fa-sun', newTheme === 'dark');
     });
 });
+
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // Smooth scrolling effect
+  });
+}
