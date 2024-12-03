@@ -36,16 +36,21 @@ def BlogPostListView(request):
     return render(request, 'blogpost_list.html', context)
 
 def BlogPostDetailView(request, slug):
-
     # Fetch the blog post by slug
     post = get_object_or_404(BlogPost, slug=slug)
 
     if post.status != 'published':
-        return render(request,'unpublished.html')  # Render a placeholder for unpublished posts
+        return render(request, 'unpublished.html')  # Render a placeholder for unpublished posts
 
     # Additional data
     categories = Category.objects.all()
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
+
+    # Get related posts based on the category
+    related_posts = BlogPost.objects.filter(
+        categories=post.categories,
+        status='published'
+    ).exclude(id=post.id)[:4]  # Exclude the current post and limit to 5
 
     breadcrumbs = [
         {'url': '/', 'name': 'Home'},
@@ -59,6 +64,7 @@ def BlogPostDetailView(request, slug):
         'categories': categories,
         'breadcrumbs': breadcrumbs,
         'recent_posts': recent_posts,
+        'related_posts': related_posts,  # Add related posts to the context
     }
 
     # Render the detail template
@@ -89,7 +95,7 @@ def category_view(request, slug):
 def search_posts(request):
     query = request.GET.get('q', '').strip()
     if query:
-        results = BlogPost.objects.filter(title__icontains=query, status='published').values('id', 'title', 'slug')
+        results = BlogPost.objects.filter(title__icontains=query, status='published').values('id', 'title', 'slug', 'updated_at')
         return JsonResponse(list(results), safe=False)
     return JsonResponse([], safe=False)  # Return an empty list if no query
 

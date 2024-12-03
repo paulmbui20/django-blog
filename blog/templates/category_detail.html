@@ -31,7 +31,18 @@
                             {% else %}
                                 <img src="{% static 'default-profile.jpg' %}" alt="{{ post.author.username }}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
                             {% endif %}
-                            <a href="{% url 'author' post.author.username %}" class="text-decoration-none">{{ post.author.username }}</a>
+                            <a href="{% url 'author' post.author.username %}" class="text-decoration-none">
+
+                                {% if post.author.first_name %}
+                                    {{ post.author.first_name }}
+                                    {% if post.author.last_name %}
+                                        {{ post.author.last_name }}
+                                    {% endif %}
+                                {% else %}
+                                    {{ post.author.username }}
+                                {% endif %}
+
+                            </a>
                         </div>
                         <h5 class="card-title">
                             <a class="text-decoration-none" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
