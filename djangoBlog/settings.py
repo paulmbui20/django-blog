@@ -41,9 +41,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 INSTALLED_APPS = [
-    "unfold",
+    "unfold", # for admin dashboard appearance customization
     "unfold.contrib.forms",  # optional, if special form elements are needed
     "unfold.contrib.inlines",  # optional, if special inlines are needed
+
+    'django.contrib.sitemaps', # for sitemaps
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,15 +55,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'froala_editor',
+    'froala_editor', #froalo wysiwyg editor
 
-    'allauth',
+    'allauth', #social authentication
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    'phonenumber_field',
-
+    'phonenumber_field', #phone number field validation
+# my custom installed
     'accounts',
     'blog',
 ]

@@ -3,6 +3,16 @@
 {% block title %}{{ post.title }}{% endblock %}
 {% block keyword %}{{ post.title }}{% endblock %}
 {% block description %}{{ post.content|safe|truncatewords:15|striptags }}{% endblock %}
+
+{% block og %}
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:description" content="{{ post.content|truncatewords:30 }}">
+<meta property="og:image" content="{{ post.featured_image.url }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Django blog">
+{% endblock %}
+
 {% block content %}
 {% include 'breadcrumb.html' %}
 <div class="container my-3">
@@ -16,16 +26,7 @@
             <img src="{% static 'default-profile.jpg' %}" alt="{{ post.author.username }}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
         {% endif %}
         <a href="/author/{{ post.author.username }}/" class="text-decoration-none">
-            <p><strong>Author</strong>:
-                {% if post.author.first_name %}
-                    {{ post.author.first_name }}
-                    {% if post.author.last_name %}
-                        {{ post.author.last_name | truncatechars:2 | upper }}
-                        {% endif %}
-                {% else %}
-                    {{ post.author.username }}
-                {% endif %}
-            </p>
+            <p><strong>Author</strong>: {% if post.author.first_name %}{{ post.author.first_name }} {% if post.author.last_name %}{{ post.author.last_name | truncatechars:2 | upper }}{% endif %}{% else %}{{ post.author.username }}{% endif %}</p>
         </a>
         <p class="mx-md-3"><strong>Last Modified:</strong> {{ post.updated_at }}</p>
 
