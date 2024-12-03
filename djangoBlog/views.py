@@ -8,12 +8,9 @@ from django.contrib.auth import get_user_model
 
 def index(request):
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]
-    posts = BlogPost.objects.filter(status='published').order_by('-created_at')
-    paginator = Paginator(posts, 16)  #pagination to show 16 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    posts = BlogPost.objects.filter(status='published').order_by('-created_at') [:4]
     categories = Category.objects.all()[:4]
-    context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts, 'page_obj': page_obj }
+    context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts}
     return render(request, 'index.html', context)
 
 

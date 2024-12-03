@@ -128,6 +128,8 @@ def edit_post(request, post_id):
 
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
+        if post.author != request.user.is_superuser:
+            post.status = 'pending'
         if form.is_valid():
             form.save()
             messages.success(request, "Post updated successfully.")
