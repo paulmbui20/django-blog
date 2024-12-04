@@ -34,6 +34,46 @@ This Django-powered blog a seamless user experience for both creators and reader
 - It's also an emerging trend on most websites today.
 - It also has a feature to check browser/client device mode preference and set it
 - The choice between light or dark mode whether pecked from device preference or adjusted by user is remembered and applied throughout the app even if page is reloaded
+
+
+### **Project Structure**
+
+The following is the structure of django my web app project:
+
+```
+django-blog/
+├── blog/                      # Main application folder
+│   ├── migrations/            # Database migration files
+│   ├── templates/             # HTML templates for the blog
+│   ├── static/                # Static files (CSS, JS, Images)
+│   │   ├── css/               # Stylesheets
+│   │   ├── js/                # JavaScript files
+│   │   └── images/            # Images used in the blog
+│   ├── admin.py               # Django admin configurations
+│   ├── apps.py                # Application-specific configurations
+│   ├── models.py              # Database models for the blog
+│   ├── views.py               # Views handling HTTP requests
+│   ├── urls.py                # URL routing for the blog
+│   └── tests.py               # Unit tests for the blog
+│
+├── django_blog/               # Project configuration folder
+│   ├── __init__.py            # Project initialization file
+│   ├── asgi.py                # ASGI configuration for async requests
+│   ├── settings.py            # Project settings (database, installed apps, etc.)
+│   ├── urls.py                # Project-wide URL routing
+│   └── wsgi.py                # WSGI configuration for deployment
+│
+├── media/                     # Uploaded media files (e.g., user images)
+├── manage.py                  # Django management script
+├── requirements.txt           # List of project dependencies
+├── db.sqlite3                 # SQLite database file (default)
+├── .gitignore                 # Git ignore file
+└── README.md                  # Project documentation (this file)
+```
+
+---
+
+
 ## Technical Implementation
 
 ### Backend
@@ -42,45 +82,8 @@ This Django-powered blog a seamless user experience for both creators and reader
 ### Frontend
 - **HTML, CSS, and Bootstrap:** Front-end that is visually appealing and responsive design.
 - **jQuery:** Enhances user interactions and dynamic elements.
-- **Sweetalert  2 js:** for interactive responses and messages 
+- **Sweetalert  2 js:** for interactive responses and messages
 
-## Installation
-
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/paulmbui20/django-blog
-    cd yourproject
-    ```
-
-2. Create a virtual environment:
-    ```sh
-    python3 -m venv env
-    source env/bin/activate  # On Windows use `env\Scripts\activate`
-    ```
-
-3. Install the required dependencies:
-    ```sh
-    pip install -r requirements.txt
-    ```
-
-4. Apply migrations:
-    ```sh
-    python manage.py migrate
-    ```
-
-5. Create a superuser:
-    ```sh
-    python manage.py createsuperuser
-    ```
-
-6. Run the development server:
-    ```sh
-    python manage.py runserver
-    ```
-
-7. Access the application at `http://localhost:8000`.
-
-## Usage
 
 ### Search Functionality
 - **Reusable Search Bar:** Embeddable on any page with customizable prefixes for unique instances.
@@ -106,24 +109,6 @@ This Django-powered blog a seamless user experience for both creators and reader
 ### 7.  cryptography==43.0.3
 ### 8.  django-autocomplete-light==3.11.0
 ### 9.  django-environ==0.11.2
-
-
-
-
-
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
