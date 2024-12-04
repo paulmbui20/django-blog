@@ -19,10 +19,11 @@
 </header>
 
         {% block content %}{% endblock %}
-<!-- Scroll to Top Button -->
+
+{% include 'footer.html' %}
+    <!-- Scroll to Top Button -->
     <button class="scroll-to-top-btn btn btn-outline-primary shadow-lg" onclick="scrollToTop()">↑</button>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
-
 </body>
 </html>
