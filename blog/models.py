@@ -51,8 +51,8 @@ class Contact(models.Model):
     email = models.EmailField()
     phone = PhoneNumberField()
     message = models.TextField(max_length=500)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateField(auto_now_add=True)
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.FirstName} {self.LastName} {self.email} {self.phone} {self.message} {self.timestamp} {self.read}"
+        return f"{self.FirstName} {self.email} {self.phone} {self.message} {self.timestamp} {self.read}"

@@ -41,10 +41,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 INSTALLED_APPS = [
-    "unfold", # for admin dashboard appearance customization
-    "unfold.contrib.forms",  # optional, if special form elements are needed
-    "unfold.contrib.inlines",  # optional, if special inlines are needed
-
     'django.contrib.sitemaps', # for sitemaps
 
     'django.contrib.admin',
@@ -63,7 +59,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'phonenumber_field', #phone number field validation
-# my custom installed
+    # my custom installed
     'accounts',
     'blog',
 ]
