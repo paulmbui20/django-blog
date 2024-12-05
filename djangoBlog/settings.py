@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)p!-3!km=(^-5w!p(+w3#j%$a#geq9667h&fr5$^e087o)tahv'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -132,6 +137,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -164,21 +171,18 @@ ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = ACCOUNT_EMAIL_REQUIRED
 
 # Google OAuth settings
+# Google OAuth settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE' : [
-            'profile',
-            'email'
-        ],
-        'APP': { ''
-                'client_id': '101281048344-md5l1scv381ng29sb8nne1movhh2po9i.apps.googleusercontent.com',
-                 'secret': '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',
-             },
+        'SCOPE': ['profile', 'email'],
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SECRET'),
+        },
         'AUTH_PARAMS': {
-            'access_type':'online',
+            'access_type': 'online',
         }
     }
 }
-
-PHONENUMBER_DEFAULT_REGION = 'KE'  # Default country code
+PHONENUMBER_DEFAULT_REGION = os.getenv('PHONENUMBER_DEFAULT_REGION', 'KE') # Default country code
 PHONENUMBER_DB_FORMAT = 'E164'    # Standardized storage format
