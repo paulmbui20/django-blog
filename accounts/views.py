@@ -1,10 +1,10 @@
 import os
 
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, login, authenticate, get_backends
 from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -20,6 +20,8 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            backend = get_backends()[0]  # Use the first backend or specify the index
+            user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
             login(request, user)
             return redirect('account')
         else:
@@ -32,13 +34,15 @@ def login_view(request):
     if request.method == "POST":
         form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
 
-            # LOGIN with username
-            user = authenticate(request, username=username, password=password)
-
+            user = authenticate(
+                request,
+                username=form.cleaned_data.get('username'),
+                password=form.cleaned_data.get('password')
+            )
             if user is not None:
+                backend = get_backends()[0]
+                user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
                 login(request, user)
                 return redirect('account')
             else:
