@@ -7,8 +7,10 @@
         <h2 class="text-center mb-4 fw-normal">Google Analytics Dashboard</h2>
         <div class="card shadow">
             <div class="card-body">
+            <div class="table-responsive">
                 <table class="table table-striped">
                     <thead class="table-dark">
+                       <thead class="table-dark">
                         <tr>
                             <th>Page</th>
                             <th>Sessions</th>
@@ -18,17 +20,18 @@
                     <tbody>
                         {% for row in rows %}
                         <tr>
-                            <td>{{ row.page }}</td>
+                            <td><a href="{{ row.absolute_url }}" target="_blank">{{ row.absolute_url }}</a></td>
                             <td>{{ row.sessions }}</td>
                             <td>{{ row.pageviews }}</td>
                         </tr>
-                            {% empty %}
+                        {% empty %}
                         <tr>
                             <td colspan="3" class="text-center">No data available</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
     </div>

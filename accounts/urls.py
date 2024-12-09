@@ -20,6 +20,8 @@ urlpatterns = [
     path('add/', add_post, name='add_post'),
     path('add-category', add_category, name='add_category'),
 
+    path('edit-category/<str:slug>/', views.edit_category, name='edit_category'),
+
     path('analytics/', analytics_dashboard, name='analytics_dashboard'),
 
     path('profile/',profile, name='profile'),

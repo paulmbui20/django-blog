@@ -4,13 +4,13 @@
     {{ form.media }}
 {% endblock %}
 
-{% block title %}Add Category{% endblock %}
+{% block title %}Edit Category{% endblock %}
 
 {% block content %}
         {% if request.user.is_superuser or request.user.is_staff %}
 
 <main class="form-container col-md-10 mx-auto p-4  my-3 border rounded shadow-lg">
-    <h2 class="text-center">Add category</h2>
+    <h2 class="text-center">Edit Category</h2>
 
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

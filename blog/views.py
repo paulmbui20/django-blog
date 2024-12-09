@@ -1,13 +1,14 @@
-import json
+
 import os
+from django.utils import timezone
 
 from django.contrib.admin.views.decorators import staff_member_required
 from dotenv import load_dotenv
 from google.oauth2.service_account import Credentials
 
 from googleapiclient.discovery import build
+from datetime import timedelta
 
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -16,7 +17,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from .forms import BlogPostForm, ContactForm, CategoryForm
-from .models import BlogPost, Category
+from .models import BlogPost, Category, AnalyticsData
 
 from django.contrib.auth.decorators import user_passes_test
 
@@ -114,16 +115,30 @@ def add_category(request):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            category_name = form.cleaned_data['category_name']
-            category_image = form.cleaned_data['category_image']
-            category_description = form.cleaned_data['category_description']
-            category = Category(name=category_name, image=category_image, description=category_description)
+            category_name = form.cleaned_data['name']
+            category_image = form.cleaned_data['categoryImage']
+            category_description = form.cleaned_data['description']
+            category = Category(name=category_name, categoryImage=category_image, description=category_description)
             category.save()
             messages.success(request, 'Category Added')
             return redirect('category_list')
     else:
         form = CategoryForm()
     return render(request, 'add_category.html', {'form': form})
+
+
+@staff_member_required
+def edit_category(request, slug):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=Category.objects.get(slug=slug))
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category Updated Successfully')
+            return redirect('category_list')
+    else:
+        form = CategoryForm(instance=Category.objects.get(slug=slug))
+    return render(request, 'edit_category.html', {'form': form})
+
 
 @login_required
 def add_post(request):
@@ -155,6 +170,8 @@ def edit_post(request, post_id):
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if post.author != request.user.is_superuser:
             post.status = 'pending'
+        else:
+            post.status = 'published'
         if form.is_valid():
             form.save()
             messages.success(request, "Post updated successfully.")
@@ -230,12 +247,26 @@ GOOGLE_CREDENTIALS = {
 # Your Google Analytics View ID (store this in the .env too if needed)
 property_id = os.getenv('GOOGLE_ANALYTICS_PROPERTY_ID')
 
-def get_google_analytics_data():
+def fetch_and_store_google_analytics_data():
     # Create credentials from the JSON dictionary
-    credentials = Credentials.from_service_account_info(GOOGLE_CREDENTIALS)
+    credentials = Credentials.from_service_account_info({
+        "type": os.getenv("GOOGLE_TYPE"),
+        "project_id": os.getenv("GOOGLE_PROJECT_ID"),
+        "private_key_id": os.getenv("GOOGLE_PRIVATE_KEY_ID"),
+        "private_key": os.getenv("GOOGLE_PRIVATE_KEY").replace('\\n', '\n'),
+        "client_email": os.getenv("GOOGLE_CLIENT_EMAIL"),
+        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+        "auth_uri": os.getenv("GOOGLE_AUTH_URI"),
+        "token_uri": os.getenv("GOOGLE_TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.getenv("GOOGLE_AUTH_PROVIDER_X509_CERT_URL"),
+        "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_X509_CERT_URL"),
+    })
 
     # Build the Analytics API client
     analytics = build('analyticsdata', 'v1beta', credentials=credentials)
+
+    # Use your GA4 property ID
+    property_id = os.getenv("GOOGLE_ANALYTICS_PROPERTY_ID")
 
     # Fetch data using the GA4 Data API
     response = analytics.properties().runReport(
@@ -247,18 +278,29 @@ def get_google_analytics_data():
         },
     ).execute()
 
-    return response
+    # Clear old data (optional: keep a historical record if desired)
+    AnalyticsData.objects.all().delete()
+
+    # Process and store new data
+    for row in response.get('rows', []):
+        page_path = row['dimensionValues'][0]['value']
+        sessions = int(row['metricValues'][0]['value'])
+        pageviews = int(row['metricValues'][1]['value'])
+        absolute_url = f"http://127.0.0.1{page_path}"  # Replace with your domain
+
+        AnalyticsData.objects.create(
+            page_path=page_path,
+            sessions=sessions,
+            pageviews=pageviews,
+            absolute_url=absolute_url,
+        )
 @staff_member_required
 def analytics_dashboard(request):
-    data = get_google_analytics_data()
+    # Check if the last update is more than 24 hours ago
+    last_entry = AnalyticsData.objects.order_by('-last_updated').first()
+    if not last_entry or last_entry.last_updated < timezone.now() - timedelta(days=1):
+        fetch_and_store_google_analytics_data()  # Fetch new data if stale
 
-    # Process data into a format suitable for templates
-    rows = []
-    for row in data.get('rows', []):
-        rows.append({
-            'page': row['dimensionValues'][0]['value'],
-            'sessions': row['metricValues'][0]['value'],
-            'pageviews': row['metricValues'][1]['value'],
-        })
-
+    # Retrieve data from the database
+    rows = AnalyticsData.objects.all()
     return render(request, 'analytics_dashboard.html', {'rows': rows})
