@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth", // Smooth scrolling effect
-  });
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Smooth scrolling effect
+    });
 }
+
