@@ -1,0 +1,32 @@
+
+
+     <div class="container py-5">
+        <h2 class="text-center mb-4 fw-normal">Google Analytics Dashboard</h2>
+        <div class="card shadow">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Page</th>
+                            <th>Sessions</th>
+                            <th>Pageviews</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            <td>{{ row.page }}</td>
+                            <td>{{ row.sessions }}</td>
+                            <td>{{ row.pageviews }}</td>
+                        </tr>
+                            {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">No data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+

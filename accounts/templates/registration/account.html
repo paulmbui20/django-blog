@@ -6,14 +6,16 @@
 <div class="container">
     <div class="row">
         <div class="col-md-10">
-            <h1 class="h3 mb-3 fw-normal">Welcome to your Account Page</h1>
+            <h1 class="h3 mb-3 ">Welcome to your Account Page</h1>
         </div>
         <div class="col-md-2">
             <a href="{% url 'add_post' %}" class="btn btn-outline-info"><i class="fa fa-plus-circle"></i> Add Posts</a>
         </div>
     </div>
 </div>
-
+    {% if request.user.is_superuser or request.user.is_staff %}
+    {% include 'analytics_dashboard.html' %}
+{% endif %}
 <div class="table-responsive">
     <table class="table table-bordered" id="postsTable">
         <thead>
@@ -85,66 +87,5 @@
 </div>
 
 </main>
-<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-<script src="{% static 'js/datatables.min.js' %}"></script>
-<script src="{% static 'js/sweetalert.js' %}"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#postsTable').DataTable({
-        "searching": true,
-        "ordering": true,
-        "lengthChange": false,
-        "pageLength": 5,
-        "order": [[1, 'desc']],
-        responsive: true
-    });
-
-    function updateStatusColor(element, status) {
-        element.removeClass('published pending text-success text-danger');
-        if (status === 'published') {
-            element.addClass('published text-success');
-        } else if (status === 'pending') {
-            element.addClass('pending text-danger');
-        }
-    }
-
-    $('.status-select').each(function() {
-        var status = $(this).val();
-        updateStatusColor($(this), status);
-    });
-
-    $('.status-select').change(function() {
-        var postId = $(this).data('post-id');
-        var newStatus = $(this).val();
-        $.ajax({
-            url: '{% url "update_post_status" %}',
-            type: 'POST',
-            data: {
-                'post_id': postId,
-                'new_status': newStatus,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Status updated successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-                // Update status color
-                updateStatusColor($('select[data-post-id="' + postId + '"]'), newStatus);
-            },
-            error: function(response) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred while updating the status.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    });
-});
-</script>
 
 {% endblock %}

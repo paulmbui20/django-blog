@@ -1,4 +1,4 @@
-{% extends 'blog_base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Blog Posts{% endblock %}
@@ -45,7 +45,7 @@
                         <h5 class="card-title">
                             <a class="text-decoration-none" href="{% url 'blogpost_detail' post.slug %}">{{ post.title|truncatewords:5 }}</a>
                         </h5>
-                        <p class="card-text">{{ post.content|truncatewords:10|safe }}</p>
+                        <p class="card-text">{{ post.content|truncatewords:10| striptags }}</p>
                     </div>
                 </div>
             </div>

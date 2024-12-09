@@ -1,6 +1,8 @@
 from django import forms
+from django_ckeditor_5.widgets import CKEditor5Widget
+
 from .models import BlogPost, Category, Contact
-from froala_editor.widgets import FroalaEditor
+
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -10,15 +12,16 @@ class CategoryForm(forms.ModelForm):
 
 
 class BlogPostForm(forms.ModelForm):
-    content = forms.CharField(widget=FroalaEditor)
     class Meta:
         model = BlogPost
         fields = ['title', 'featured_image', 'content', 'categories']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control'}),
             'featured_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'categories': forms.Select(attrs={'class': 'form-select'}),
+            "content": CKEditor5Widget(
+                attrs={"class": "django_ckeditor_5"}, config_name="default"
+            )
         }
 class ContactForm(forms.ModelForm):
     class Meta:

@@ -1,4 +1,4 @@
-{% extends 'blog_base.html' %}
+{% extends 'base.html' %}
 {% block title %}Sign up{% endblock %}
 {% load socialaccount %}
 {% block content %}
@@ -9,13 +9,6 @@
   {% csrf_token %}
         <h1 class="h3 mb-3 text-center fw-normal">Django Blog Registration</h1>
 
-         {% if messages %}
-      <div class="alert alert-danger">
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
   {{ form.as_p }}
   <button class="btn btn-primary w-50 py-2" type="submit">Register</button>
       <span class="mx-3">OR </span>

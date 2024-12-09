@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load form_tags static %}
-{{ form.media }}
+{% block header %}
+    {{ form.media }}
+{% endblock %}
+
 {% block title %}Edit - {{ post.title }}{% endblock %}
 
 {% block content %}
@@ -51,30 +54,5 @@
     </form>
 
 </main>
-
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new FroalaEditor('#id_content', {
-    toolbarButtons: [
-         'paragraphFormat', '|', 'bold', 'italic', 'underline', 'strikeThrough', '|',
-        'align', 'formatOL', 'formatUL', '|', 'insertLink', 'insertImage', 'insertTable', '|',
-        'html', 'fullscreen',
-    ],
-    paragraphFormat: {
-        N: 'Normal Text',
-        H1: 'Heading 1',
-        H2: 'Heading 2',
-        H3: 'Heading 3',
-        H4: 'Heading 4',
-    },
-    height: 400,
-    placeholderText: 'Write something amazing...',
-});
-
-
-    });
-</script>
-
 
 {% endblock %}

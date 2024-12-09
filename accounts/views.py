@@ -22,6 +22,7 @@ def register(request):
             user = form.save()
             backend = get_backends()[0]  # Use the first backend or specify the index
             user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
+            messages.success(request, "Account created successfully")
             login(request, user)
             return redirect('account')
         else:
@@ -34,7 +35,6 @@ def login_view(request):
     if request.method == "POST":
         form = CustomAuthenticationForm(data=request.POST)
         if form.is_valid():
-
             user = authenticate(
                 request,
                 username=form.cleaned_data.get('username'),
@@ -44,6 +44,7 @@ def login_view(request):
                 backend = get_backends()[0]
                 user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
                 login(request, user)
+                messages.success(request, "Logged in successfully")
                 return redirect('account')
             else:
                 messages.error(request, "Invalid username or password.")
@@ -56,6 +57,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    messages.success(request, "Logged out successfully")
     return redirect('login')
 
 

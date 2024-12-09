@@ -1,8 +1,9 @@
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
-from froala_editor.fields import FroalaField
+from django_ckeditor_5.fields import CKEditor5Field
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -28,7 +29,7 @@ class BlogPost(models.Model):
     )
     title = models.CharField(max_length=200)
     featured_image = models.ImageField(upload_to='featured_images/')
-    content =  FroalaField()
+    content =  CKEditor5Field('Text', config_name='extends',null=True)
     slug = models.SlugField(unique=True)
     categories = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

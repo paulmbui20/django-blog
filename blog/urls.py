@@ -10,8 +10,4 @@ urlpatterns = [
     path('', BlogPostListView, name='blogpost_list'),
     path('search/', views.search_posts, name='search_posts'),
     path('<slug:slug>/', BlogPostDetailView, name='blogpost_detail'),
-    path('froala_editor/', include('froala_editor.urls')),
 ]
-
-if settings.DEBUG:
-    urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

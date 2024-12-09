@@ -1,3 +1,13 @@
+import json
+import os
+
+from django.contrib.admin.views.decorators import staff_member_required
+from dotenv import load_dotenv
+from google.oauth2.service_account import Credentials
+
+from googleapiclient.discovery import build
+
+from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -183,3 +193,63 @@ def contactform(request):
 
 def contact(request):
     return render(request, 'contact.html', {'form': ContactForm()})
+
+
+# Load environment variables from .env
+load_dotenv()
+
+
+# Create a dictionary for credentials from environment variables
+GOOGLE_CREDENTIALS = {
+    "type": os.getenv("GOOGLE_TYPE"),
+    "project_id": os.getenv("GOOGLE_PROJECT_ID"),
+    "private_key_id": os.getenv("GOOGLE_PRIVATE_KEY_ID"),
+    "private_key": os.getenv("GOOGLE_PRIVATE_KEY").replace('\\n', '\n'),  # Fix newlines
+    "client_email": os.getenv("GOOGLE_CLIENT_EMAIL"),
+    "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+    "auth_uri": os.getenv("GOOGLE_AUTH_URI"),
+    "token_uri": os.getenv("GOOGLE_TOKEN_URI"),
+    "auth_provider_x509_cert_url": os.getenv("GOOGLE_AUTH_PROVIDER_X509_CERT_URL"),
+    "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_X509_CERT_URL"),
+}
+# Your Google Analytics View ID (store this in the .env too if needed)
+VIEW_ID = os.getenv('GOOGLE_ANALYTICS_PROPERTY_ID')
+
+def get_google_analytics_data():
+    # Create credentials from the JSON dictionary
+    credentials = Credentials.from_service_account_info(GOOGLE_CREDENTIALS)
+
+    # Build the Analytics API client
+    analytics = build('analyticsreporting', 'v4', credentials=credentials)
+
+    # Fetch analytics data
+    response = analytics.reports().batchGet(
+        body={
+            'reportRequests': [
+                {
+                    'viewId': VIEW_ID,
+                    'dateRanges': [{'startDate': '7daysAgo', 'endDate': 'today'}],
+                    'metrics': [{'expression': 'ga:sessions'}, {'expression': 'ga:pageviews'}],
+                    'dimensions': [{'name': 'ga:pagePath'}],
+                }
+            ]
+        }
+    ).execute()
+    return response
+
+@staff_member_required
+def analytics_dashboard(request):
+    # Get the Google Analytics data
+    raw_data = get_google_analytics_data()
+
+    # Extract rows from the API response
+    rows = []
+    for row in raw_data.get('rows', []):
+        rows.append({
+            'page': row['dimensionValues'][0]['value'],
+            'sessions': row['metricValues'][0]['value'],
+            'pageviews': row['metricValues'][1]['value'],
+        })
+
+    # Pass the rows to the template
+    return render(request, 'analytics_dashboard.html', {'rows': rows})

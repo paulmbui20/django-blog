@@ -55,14 +55,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'froala_editor', #froalo wysiwyg editor
-
     'allauth', #social authentication
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
     'phonenumber_field', #phone number field validation
+    'analytical',
+    'django_ckeditor_5',
+
     # my custom installed
     'accounts',
     'blog',
@@ -170,18 +171,63 @@ ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = ACCOUNT_EMAIL_REQUIRED
 
 # Google OAuth settings
-# Google OAuth settings
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_SECRET'),
+GOOGLE_ANALYTICS_GTAG_PROPERTY_ID = os.getenv('GOOGLE_ANALYTICS_PROPERTY_ID')
+
+
+PHONENUMBER_DEFAULT_REGION = os.getenv('PHONENUMBER_DEFAULT_REGION', 'KE') # Default country code
+PHONENUMBER_DB_FORMAT = 'E164'    # Standardized storage format
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload',
+                    'imageUpload', 'imageResize', 'imageCaption', 'imageStyle', 'imageToolbar', ],
+
+    },
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|',
+            'bulletedList', 'numberedList',
+            '|',
+            'blockQuote',
+        ],
+        'toolbar': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+        'code','subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
+                    'bulletedList', 'numberedList', 'todoList', '|',  'blockQuote', 'imageUpload', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
+                    'insertTable',],
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
+                        'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side',  '|'],
+            'styles': [
+                'full',
+                'side',
+                'alignLeft',
+                'alignRight',
+                'alignCenter',
+            ]
+
         },
-        'AUTH_PARAMS': {
-            'access_type': 'online',
+        'table': {
+            'contentToolbar': [ 'tableColumn', 'tableRow', 'mergeTableCells',
+            'tableProperties', 'tableCellProperties' ],
+        },
+        'heading' : {
+            'options': [
+                { 'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph' },
+                { 'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1' },
+                { 'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2' },
+                { 'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3' }
+            ]
+        }
+    },
+    'list': {
+        'properties': {
+            'styles': 'true',
+            'startIndex': 'true',
+            'reversed': 'true',
         }
     }
 }
-PHONENUMBER_DEFAULT_REGION = os.getenv('PHONENUMBER_DEFAULT_REGION', 'KE') # Default country code
-PHONENUMBER_DB_FORMAT = 'E164'    # Standardized storage format
+

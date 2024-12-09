@@ -1,4 +1,4 @@
-
+from django import forms
 from django.contrib import admin
 
 from .models import BlogPost, Category, Contact
@@ -6,6 +6,7 @@ from .models import BlogPost, Category, Contact
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
+
     list_display = ('title', 'created_at')
     list_filter = ('status', 'categories')
     prepopulated_fields = {'slug': ('title',)}

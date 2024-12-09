@@ -1,4 +1,5 @@
 {% load static %}
+{% load analytical %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,10 +13,13 @@
     <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/froala_editor.css' %}">
-    <link rel="stylesheet" href="{% static 'css/froala_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
+    <!-- Google Analytics -->
+    {% analytical_head_top %}
 </head>
 <body>
+{% block header %}
+{% endblock %}
 {% include 'navbar.html' %}
 
 {% block content %}
@@ -25,13 +29,86 @@
 <!-- Scroll to Top Button -->
     <button class="scroll-to-top-btn btn btn-outline-primary shadow-lg" onclick="scrollToTop()">↑</button>
 {% include 'footer.html' %}
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script src="{% static 'js/sweetalert.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'js/froala_editor.min.js' %}"></script>
-<script src="{% static 'plugins/paragraph_format.min.js' %}"></script>
-<script src="{% static 'plugins/paragraph_style.min.js' %}"></script>
-    <script src="{% static 'plugins/link.min.js' %}"></script>
-    <script src="{% static 'plugins/table.min.js' %}"></script>
-    <script src="{% static 'plugins/lists.min.js' %}"></script>
+<script src="{% static 'js/toastr.min.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
+<script>
+    $(document).ready(function (){
+        {% for message in messages %}
+            var messageType = "{{ message.tags }}";
+            var messageText = "{{ message }}";
+            toastr.options = {
+                closeButton: true,
+                newestOnTop: true,
+                progressBar: true, positionClass: 'toast-top-right', preventDuplicates: true,
+                timeOut: 5000,
+                showMethod: 'fadeIn'
+            };
+
+            if (messageType === 'success'){
+                toastr.success(messageText);
+            } else if (messageType === 'error'){
+                toastr.error(messageText);
+            }        {% endfor %}
+  $('#postsTable').DataTable({
+        "searching": true,
+        "ordering": true,
+        "lengthChange": false,
+        "pageLength": 5,
+        "order": [[1, 'desc']],
+        responsive: true
+    });
+
+    function updateStatusColor(element, status) {
+    element.removeClass('published pending text-success text-danger');
+    if (status === 'published') {
+    element.addClass('published text-success');
+} else if (status === 'pending') {
+    element.addClass('pending text-danger');
+}
+}
+
+    $('.status-select').each(function() {
+    var status = $(this).val();
+    updateStatusColor($(this), status);
+});
+
+    $('.status-select').change(function() {
+    var postId = $(this).data('post-id');
+    var newStatus = $(this).val();
+    $.ajax({
+    url: '{% url "update_post_status" %}',
+    type: 'POST',
+    data: {
+    'post_id': postId,
+    'new_status': newStatus,
+    'csrfmiddlewaretoken': '{{ csrf_token }}'
+},
+    success: function(response) {
+    Swal.fire({
+    title: 'Success!',
+    text: 'Status updated successfully!',
+    icon: 'success',
+    confirmButtonText: 'OK'
+});
+    // Update status color
+    updateStatusColor($('select[data-post-id="' + postId + '"]'), newStatus);
+},
+    error: function(response) {
+    Swal.fire({
+    title: 'Error!',
+    text: 'An error occurred while updating the status.',
+    icon: 'error',
+    confirmButtonText: 'OK'
+});
+}
+});
+});
+            });
+
+</script>
