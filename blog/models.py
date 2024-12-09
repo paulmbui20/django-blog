@@ -46,6 +46,17 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
+class AnalyticsData(models.Model):
+    page_path = models.CharField(max_length=255)
+    sessions = models.IntegerField()
+    pageviews = models.IntegerField()
+    absolute_url = models.URLField()
+    last_updated = models.DateTimeField(auto_now=True)
+
+def __str__(self):
+    return self.page_path
+
+
 class Contact(models.Model):
     FirstName = models.CharField(max_length=65)
     LastName = models.CharField(max_length=65, blank=True, null=True)

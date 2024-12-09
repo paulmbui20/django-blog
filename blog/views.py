@@ -15,7 +15,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import BlogPostForm, ContactForm
+from .forms import BlogPostForm, ContactForm, CategoryForm
 from .models import BlogPost, Category
 
 from django.contrib.auth.decorators import user_passes_test
@@ -109,6 +109,21 @@ def search_posts(request):
         return JsonResponse(list(results), safe=False)
     return JsonResponse([], safe=False)  # Return an empty list if no query
 
+@user_passes_test(lambda u: u.is_superuser or u.is_staff)
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category_name = form.cleaned_data['category_name']
+            category_image = form.cleaned_data['category_image']
+            category_description = form.cleaned_data['category_description']
+            category = Category(name=category_name, image=category_image, description=category_description)
+            category.save()
+            messages.success(request, 'Category Added')
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    return render(request, 'add_category.html', {'form': form})
 
 @login_required
 def add_post(request):
@@ -213,43 +228,37 @@ GOOGLE_CREDENTIALS = {
     "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_X509_CERT_URL"),
 }
 # Your Google Analytics View ID (store this in the .env too if needed)
-VIEW_ID = os.getenv('GOOGLE_ANALYTICS_PROPERTY_ID')
+property_id = os.getenv('GOOGLE_ANALYTICS_PROPERTY_ID')
 
 def get_google_analytics_data():
     # Create credentials from the JSON dictionary
     credentials = Credentials.from_service_account_info(GOOGLE_CREDENTIALS)
 
     # Build the Analytics API client
-    analytics = build('analyticsreporting', 'v4', credentials=credentials)
+    analytics = build('analyticsdata', 'v1beta', credentials=credentials)
 
-    # Fetch analytics data
-    response = analytics.reports().batchGet(
+    # Fetch data using the GA4 Data API
+    response = analytics.properties().runReport(
+        property=f"properties/{property_id}",
         body={
-            'reportRequests': [
-                {
-                    'viewId': VIEW_ID,
-                    'dateRanges': [{'startDate': '7daysAgo', 'endDate': 'today'}],
-                    'metrics': [{'expression': 'ga:sessions'}, {'expression': 'ga:pageviews'}],
-                    'dimensions': [{'name': 'ga:pagePath'}],
-                }
-            ]
-        }
+            "dateRanges": [{"startDate": "7daysAgo", "endDate": "today"}],
+            "dimensions": [{"name": "pagePath"}],
+            "metrics": [{"name": "sessions"}, {"name": "screenPageViews"}],
+        },
     ).execute()
-    return response
 
+    return response
 @staff_member_required
 def analytics_dashboard(request):
-    # Get the Google Analytics data
-    raw_data = get_google_analytics_data()
+    data = get_google_analytics_data()
 
-    # Extract rows from the API response
+    # Process data into a format suitable for templates
     rows = []
-    for row in raw_data.get('rows', []):
+    for row in data.get('rows', []):
         rows.append({
             'page': row['dimensionValues'][0]['value'],
             'sessions': row['metricValues'][0]['value'],
             'pageviews': row['metricValues'][1]['value'],
         })
 
-    # Pass the rows to the template
     return render(request, 'analytics_dashboard.html', {'rows': rows})

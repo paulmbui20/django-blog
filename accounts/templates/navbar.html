@@ -31,6 +31,10 @@
             <ul class="dropdown-menu my-3">
                 {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url 'account' %}">Dashboard</a></li>
+                {% if request.user.is_superuser or request.user.is_staff %}
+              <li><a class="dropdown-item" href="{% url 'add_category' %}">Add Category</a></li>
+              <li><a class="dropdown-item" href="{% url 'analytics_dashboard' %}">View Analytics</a></li>
+                    {% endif %}
               <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
               <li><a class="dropdown-item" href="{% url 'add_post' %}">Write a Post</a></li>
               <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>

@@ -39,9 +39,8 @@
         width="50%"
       />
       <p>{{ post.content|safe }}</p> <br>
-        <span class="bg-warning-subtle  my-3 py-3 px-5 rounded-pill">Created at: {{ post.created_at }}</span><br><hr>
             <h5>About the author</h5>
-                <div class="card shadow-lg w-50 m-auto">
+                <div class="card w-25">
                     {% if post.author.image %}
                         <img src="{{ post.author.image.url }}" class="card-img-top" alt="{{ author.username }}" style="height: 200px; object-fit: contain;">
                     {% else %}
@@ -53,7 +52,7 @@
                            {{ post.author.first_name }} {{ post.author.last_name }}{% if not post.author.first_name and not post.author.last_name %}{{ post.author.username }}{% endif %}
                         </a>
                         </h5>
-                        <p class="card-text">{{ post.author.bio|truncatewords:10 }}</p>
+                        <p class="card-text">{{ post.author.bio|truncatewords:15 }}</p>
                     </div>
                 </div>
     </div>
