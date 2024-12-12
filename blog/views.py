@@ -22,10 +22,9 @@ from .models import BlogPost, Category, AnalyticsData
 from django.contrib.auth.decorators import user_passes_test
 
 def BlogPostListView(request):
-    posts = BlogPost.objects.filter(status='published')  # Filter posts by status 'published'
+    posts = BlogPost.objects.filter(status='published').order_by('-created_at')  # Filter posts by status 'published'
     categories = Category.objects.all()
     years = BlogPost.objects.dates('created_at', 'year')  # Get unique years for archive links
-    recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
 
     paginator = Paginator(posts, 16)  #pagination to show 16 posts per page
     page_number = request.GET.get('page')
@@ -40,7 +39,6 @@ def BlogPostListView(request):
         'categories': categories,
         'breadcrumbs': breadcrumbs,
         'years': years,
-        'recent_posts': recent_posts,
         'page_obj': page_obj,
 
     }
@@ -83,7 +81,7 @@ def BlogPostDetailView(request, slug):
 
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    posts = BlogPost.objects.filter(categories=category,status='published')  # Only show published posts
+    posts = BlogPost.objects.filter(categories=category,status='published').order_by('-created_at')  # Only show published posts
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
 
     paginator = Paginator(posts, 16)  #pagination to show 16 posts per page

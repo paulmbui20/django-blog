@@ -20,7 +20,7 @@ def author(request, slug):
     author = get_object_or_404(CustomUser, username=slug)
 
     # Filter blog posts by the author
-    posts = BlogPost.objects.filter(author=author)
+    posts = BlogPost.objects.filter(author=author).order_by('-created_at')
 
     # Custom breadcrumbs
     breadcrumbs = [
