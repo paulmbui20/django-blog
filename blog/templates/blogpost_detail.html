@@ -65,7 +65,7 @@
         </div>
     </div>
   </div>
-</div>
+
 
     <section class="related-posts mt-5 container">
     <h2 class="mb-4">Related Posts</h2>
@@ -93,5 +93,54 @@
         {% endfor %}
     </div>
 </section>
-
+<div class="row shadow-sm rounded ">
+    <div class="col-md-10 mx-auto">
+        <div class="container">
+            <h5 class=" my-2">{% if comments_count %}<strong>{{ comments_count }}</strong>{% endif %} Comments</h5>
+    {% for comment in comments %}
+    <div class="row">
+    <p class="my-3" id="comments">
+        <i class="fa fa-user-circle" style="font-size: 1.6rem; margin: 10px; color: #0a58ca;"></i>{{ comment.comment }} by {{ comment.name }} on {{ comment.created_at }}<br>
+    </p>
+    </div>
+        {% empty %}
+        <p>No comments on this post yet... be the first to leave a comment</p>
+     {% endfor %}
+        <form id="CommentForm" method="POST" action="{% url 'commentform' post.slug %}">
+            {% csrf_token %}
+            <div class="row">
+          <div class="col-md-6">
+              <div class="mb-3">
+                  {{ form.name.label_tag }}
+                    {{ form.name }}
+                {{ form.name.errors }}
+              </div>
+              <div class="mb-3">
+                  {{ form.email.label_tag }}
+                    {{ form.email }}
+                {{ form.email.errors }}
+              </div>
+          </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                          {{ form.comment.label_tag }}
+                            {{ form.comment }}
+                        {{ form.comment.errors }}
+                    </div>
+                </div>
+                <div class="col-md-6 mx-auto">
+                    <input type="hidden" value="{{ post.id }}" name="blog_post">
+                    <input
+                            class="col-md-3 my-2 btn  btn-outline-primary"
+                            type="submit"
+                            value="submit"
+                    >
+                </div>
+            </div>
+</form>
+        </div>
+</div>
+</div>
+</div>
 {% endblock %}
+

@@ -1,7 +1,7 @@
 from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from .models import BlogPost, Category, Contact
+from .models import BlogPost, Category, Contact, Comment
 
 
 class CategoryForm(forms.ModelForm):
@@ -14,7 +14,15 @@ class CategoryForm(forms.ModelForm):
             'categoryImage':forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
-
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name', 'email', 'comment', 'blog_post']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'rows':4}),
+        }
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
@@ -31,7 +39,7 @@ class BlogPostForm(forms.ModelForm):
 class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
-        fields = ['FirstName', 'LastName', 'email', 'phone', 'message']
+        fields = ['FirstName', 'LastName', 'email', 'phone', 'message', 'priority']
         widgets = {
             'FirstName': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -57,10 +65,16 @@ class ContactForm(forms.ModelForm):
                 'placeholder': 'Enter your Phone',
                 'id': 'phone',
             }),
+            'priority': forms.Select(attrs={
+                'class': 'form-select',
+                'label': 'Priority',
+                'id': 'priority',
+            }),
             'message': forms.Textarea(attrs={
                 'class': 'form-control',
                 'label': 'Message',
                 'placeholder': 'Enter your Message',
                 'id': 'message',
+                'rows': 14,
             }),
         }

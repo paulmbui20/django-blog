@@ -48,9 +48,9 @@ def authors_list_view(request):
                 'username': author.username,
                 'first_name': author.first_name,
                 'last_name': author.last_name,
-                'bio': author.bio,  # Assuming bio is in the profile
-                'website': author.website,  # Assuming website is in the profile
-                'image': author.image,  # Assuming picture is in the profile
+                'bio': author.bio,
+                'website': author.website,
+                'image': author.image,
                 'post_count': author_posts
             })
     paginator = Paginator(authors, 16)  #pagination to show 16 posts per page

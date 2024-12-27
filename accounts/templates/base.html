@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
+{% block headtags %}{% endblock %}
     <!-- Google Analytics -->
     {% analytical_head_top %}
 </head>
@@ -24,7 +25,7 @@
 
 {% block content %}
 {% endblock %}
-
+{% block extrascripts %}{% endblock %}
 
 <!-- Scroll to Top Button -->
     <button class="scroll-to-top-btn btn btn-outline-primary shadow-lg" onclick="scrollToTop()">↑</button>

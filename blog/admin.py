@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from .models import BlogPost, Category, Contact
+from .models import BlogPost, Category, Contact, Comment
 
 
 @admin.register(BlogPost)
@@ -24,18 +24,23 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     prepopulated_fields = {'slug': ('name',)}
 
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'comment', 'blog_post__title', 'created_at')
+    list_filter = ('created_at',)
+
 
 @admin.register(Contact)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'FirstName', 'phone', 'email', 'message', 'timestamp', 'read')
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('id', 'FirstName', 'phone', 'email', 'timestamp', 'read', 'priority')
     search_fields = ('FirstName', 'LastName', 'message')
-    list_filter = ('read', 'timestamp')
+    list_filter = ('read', 'timestamp', 'priority')
     list_editable = ('read',)
-    actions = ['read_comments']
-    list_display_links = ('id','FirstName','message',)
+    actions = ['read_contact']
+    list_display_links = ('id','FirstName',)
 
-    def read_comments(self, request, queryset):
+    def read_contact(self, request, queryset):
         queryset.update(read=True)
-        self.message_user(request, 'Selected comments have been read.')
-    read_comments.short_description = 'Read selected comments'
+        self.message_user(request, 'Selected contact have been read.')
+    read_contact.short_description = 'Read selected contact'
 

@@ -21,6 +21,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name_plural = "Categories"
 
 class BlogPost(models.Model):
     STATUS_CHOICES = (
@@ -34,7 +36,6 @@ class BlogPost(models.Model):
     categories = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
 
@@ -45,6 +46,20 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+class Comment(models.Model):
+    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+    comment = models.TextField()
+    name = models.CharField(max_length=65)
+    email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.comment
+
+    class Meta:
+        ordering = ['-created_at']
 
 class AnalyticsData(models.Model):
     page_path = models.CharField(max_length=255)
@@ -58,6 +73,10 @@ def __str__(self):
 
 
 class Contact(models.Model):
+    priority_choices = [
+        ('normal', 'normal'),
+        ('urgent', 'urgent'),
+    ]
     FirstName = models.CharField(max_length=65)
     LastName = models.CharField(max_length=65, blank=True, null=True)
     email = models.EmailField()
@@ -65,6 +84,7 @@ class Contact(models.Model):
     message = models.TextField(max_length=500)
     timestamp = models.DateField(auto_now_add=True)
     read = models.BooleanField(default=False)
+    priority = models.CharField(max_length=65, choices=priority_choices, default='normal')
 
     def __str__(self):
-        return f"{self.FirstName} {self.email} {self.phone} {self.message} {self.timestamp} {self.read}"
+        return f"{self.FirstName} - {self.timestamp}"

@@ -1,5 +1,6 @@
 
 import os
+
 from django.utils import timezone
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -12,12 +13,12 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, response, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import BlogPostForm, ContactForm, CategoryForm
-from .models import BlogPost, Category, AnalyticsData
+from .forms import BlogPostForm, ContactForm, CategoryForm, CommentForm
+from .models import BlogPost, Category, AnalyticsData, Comment
 
 from django.contrib.auth.decorators import user_passes_test
 
@@ -47,14 +48,15 @@ def BlogPostListView(request):
 def BlogPostDetailView(request, slug):
     # Fetch the blog post by slug
     post = get_object_or_404(BlogPost, slug=slug)
-
+    form = CommentForm()
     if post.status != 'published':
         return render(request, 'unpublished.html')  # Render a placeholder for unpublished posts
 
     # Additional data
     categories = Category.objects.all()
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
-
+    comments = Comment.objects.filter(blog_post=post).order_by('-created_at')
+    comments_count = comments.count()
     # Get related posts based on the category
     related_posts = BlogPost.objects.filter(
         categories=post.categories,
@@ -74,11 +76,25 @@ def BlogPostDetailView(request, slug):
         'breadcrumbs': breadcrumbs,
         'recent_posts': recent_posts,
         'related_posts': related_posts,  # Add related posts to the context
+        'form': form,
+        'comments': comments,
+        'comments_count': comments_count,
     }
 
     # Render the detail template
     return render(request, 'blogpost_detail.html', context)
 
+def commentform(request, slug):
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Comment successfully saved')
+                return redirect( 'blogpost_detail', slug=slug)
+            else:
+                messages.error(request, 'Please check your input')
+        else:
+            messages.error(request, 'Error')
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     posts = BlogPost.objects.filter(categories=category,status='published').order_by('-created_at')  # Only show published posts
