@@ -4,13 +4,11 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
-
 from phonenumber_field.modelfields import PhoneNumberField
-
 
 class Category(models.Model):
     name = models.CharField(max_length=65)
-    description = models.TextField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     slug = models.SlugField(unique=True)
     categoryImage = models.ImageField(upload_to="category_images/", null=True, blank=True)
 
@@ -29,7 +27,7 @@ class BlogPost(models.Model):
         ('pending', 'Pending'),
         ('published', 'Published'),
     )
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=255)
     featured_image = models.ImageField(upload_to='featured_images/')
     content =  CKEditor5Field('Text', config_name='extends',null=True)
     slug = models.SlugField(unique=True)
@@ -79,9 +77,9 @@ class Contact(models.Model):
     ]
     FirstName = models.CharField(max_length=65)
     LastName = models.CharField(max_length=65, blank=True, null=True)
-    email = models.EmailField()
+    email = models.EmailField(max_length=65)
     phone = PhoneNumberField()
-    message = models.TextField(max_length=500)
+    message = models.TextField()
     timestamp = models.DateField(auto_now_add=True)
     read = models.BooleanField(default=False)
     priority = models.CharField(max_length=65, choices=priority_choices, default='normal')
