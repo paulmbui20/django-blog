@@ -160,8 +160,9 @@
         </div>
     </div>
 
-    <script  src="../../static/js/jquery-3.6.0.min.js"></script>
-    <script src="../../static/js/sweetalert.js"></script>
+{% endblock %}
+{% block extrascripts %}
+    <script src="{% static 'js/sweetalert.js' %}"></script>
         <script>
         $('#profileEditForm').on('submit', function(e) {
             e.preventDefault();
@@ -291,6 +292,5 @@ $('#deleteImageBtn').on('click', function() {
 });
 });
     </script>
-
 
 {% endblock %}
