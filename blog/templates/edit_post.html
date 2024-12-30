@@ -23,28 +23,33 @@
             {% endfor %}
         </div>
 
-        <!-- Featured Image -->
-        <div class="form-group mb-3">
+        <div class="row d-flex flex-row align-items-end">
+            <div class="col-md-6">
+                <!-- Featured Image -->
+                <div class="form-group mb-3">
             <label for="id_featured_image" class="form-label">Featured Image</label>
             {{ form.featured_image }}
             {% for error in form.featured_image.errors %}
             <div class="text-danger">{{ error }}</div>
             {% endfor %}
         </div>
+            </div>
+            <div class="col-md-6">
+                <!-- Categories -->
+                <div class="form-group mb-3">
+            <label for="id_categories" class="form-label">Categories</label>
+            {{ form.categories }}
+            {% for error in form.categories.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+            </div>
+        </div>
 
         <div class="form-group mb-3">
             <label for="id_content" class="form-label">Content</label>
             {{ form.content }}
             {% for error in form.content.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <!-- Categories -->
-        <div class="form-group mb-3">
-            <label for="id_categories" class="form-label">Categories</label>
-            {{ form.categories }}
-            {% for error in form.categories.errors %}
             <div class="text-danger">{{ error }}</div>
             {% endfor %}
         </div>

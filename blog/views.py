@@ -143,7 +143,7 @@ def search_posts(request):
 @user_passes_test(lambda u: u.is_superuser or u.is_staff)
 def add_category(request):
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = CategoryForm(request.POST, request.FILES)
         if form.is_valid():
             category_name = form.cleaned_data['name']
             category_image = form.cleaned_data['categoryImage']
@@ -160,7 +160,8 @@ def add_category(request):
 @staff_member_required
 def edit_category(request, slug):
     if request.method == 'POST':
-        form = CategoryForm(request.POST, instance=Category.objects.get(slug=slug))
+        category = get_object_or_404(Category, slug=slug)
+        form = CategoryForm(request.POST, request.FILES, instance=category)
         if form.is_valid():
             form.save()
             messages.success(request, 'Category Updated Successfully')
