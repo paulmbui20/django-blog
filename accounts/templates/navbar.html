@@ -28,12 +28,13 @@
             <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-user" style="font-size: 1.7rem; color: #EcF5Ff"></i>
             </button>
-            <ul class="dropdown-menu my-3">
+            <ul class="dropdown-menu my-3 z-3">
                 {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url 'account' %}">Dashboard</a></li>
                 {% if request.user.is_superuser or request.user.is_staff %}
               <li><a class="dropdown-item" href="{% url 'add_category' %}">Add Category</a></li>
               <li><a class="dropdown-item" href="{% url 'analytics_dashboard' %}">View Analytics</a></li>
+              <li><a class="dropdown-item" href="{% url 'queries' %}">View Queries</a></li>
                     {% endif %}
               <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
               <li><a class="dropdown-item" href="{% url 'add_post' %}">Write a Post</a></li>

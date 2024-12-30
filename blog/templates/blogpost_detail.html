@@ -40,7 +40,7 @@
       />
       <p>{{ post.content|safe }}</p> <br>
             <h5>About the author</h5>
-                <div class="card w-25">
+                <div class="card col-md-4">
                     {% if post.author.image %}
                         <img src="{{ post.author.image.url }}" class="card-img-top" alt="{{ author.username }}" style="height: 200px; object-fit: contain;">
                     {% else %}
@@ -53,6 +53,9 @@
                         </a>
                         </h5>
                         <p class="card-text">{{ post.author.bio|truncatewords:15 }}</p>
+                        {% if post.author.website %}
+                        <a class="text-decoration-none" href="{{ post.author.website }}">website</a>
+                        {% endif %}
                     </div>
                 </div>
     </div>
@@ -96,18 +99,25 @@
 <div class="row shadow-sm rounded ">
     <div class="col-md-10 mx-auto">
         <div class="container">
-            <h5 class=" my-2">{% if comments_count %}<strong>{{ comments_count }}</strong>{% endif %} Comments</h5>
+            <h5 class=" my-3">{% if comments_count %}<strong>{{ comments_count }}</strong>{% endif %} Comments</h5>
     {% for comment in comments %}
     <div class="row">
     <div class="d-flex align-items-center">
         <p class="my-3 d-flex align-items-center" id="comments">
             <i class="fa fa-user-circle" style="font-size: 1.6rem; margin: 10px; color: #0a58ca;"></i>{{ comment.comment }} by {{ comment.name }} on {{ comment.created_at }}<br>
         </p>
-        {% if user.is_authenticated and user.is_staff %}
+        {% if user.is_authenticated and user.is_superuser %}
             <form action="{% url 'deletecomment' comment.pk %}" method="post" class="d-flex align-items-center">
             {% csrf_token %}
             <input type="hidden" value="{{ post.slug }}" name="post_slug">
-                <button type="submit"  class="mx-3 btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                <button
+                        type="submit"
+                        class="mx-3 btn btn-sm btn-outline-danger"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-title="Delete comment">
+                    <i class="fa fa-trash"></i>
+                </button>
             </form>
         {% endif %}
     </div>
@@ -116,7 +126,8 @@
         {% empty %}
         <p>No comments on this post yet... be the first to leave a comment</p>
      {% endfor %}
-        <form id="CommentForm" method="post" action="{% url 'commentform' post.slug %}">
+            <div class="py-3 px-3 shadow-lg mb-3 rounded">
+         <form id="CommentForm" method="post" action="{% url 'commentform' post.slug %}">
             {% csrf_token %}
             <div class="row">
           <div class="col-md-6">
@@ -141,13 +152,14 @@
                 <div class="col-md-6 mx-auto">
                     <input type="hidden" value="{{ post.id }}" name="blog_post">
                     <button
-                            class="col-md-3 my-2 btn  btn-outline-primary"
+                            class="col-md-3 btn  btn-outline-primary"
                             type="submit"
                     > Submit
                     </button>
                 </div>
             </div>
 </form>
+            </div>
         </div>
 </div>
 </div>

@@ -3,12 +3,12 @@ import os
 from django.contrib.auth import update_session_auth_hash, login, authenticate, get_backends
 from django.http import JsonResponse
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from blog.models import BlogPost
+from blog.models import BlogPost, Contact
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm
 
 import jwt
@@ -163,3 +163,29 @@ def decode_jwt_token(token):
     # Token has expired
     except jwt.InvalidTokenError:
         return None # Invalid token
+
+@login_required
+def queries(request):
+    if request.user.is_superuser:
+        contact_queries = Contact.objects.all()
+        context = {
+            'contact_queries': contact_queries
+        }
+        return render(request, 'queries.html', context)
+    else:
+        messages.error(request, "You are not authorized to access this page.")
+        return redirect('login')
+
+@login_required
+def delete_contact_query(request):
+    if request.method == 'POST':
+        pk = request.POST.get('id')
+        contact = get_object_or_404(Contact, pk=pk)
+        if request.user.is_superuser:
+            contact.delete()
+            # messages.success(request, 'Contact query deleted successfully.')
+            return JsonResponse({'success': True, 'message': 'Contact query deleted successfully.'})
+        else:
+            return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action.'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request.'})

@@ -53,7 +53,12 @@
                 toastr.success(messageText);
             } else if (messageType === 'error') {
                 toastr.error(messageText);
-            }        {% endfor %}
+            }  else if (messageType === 'info') {
+                toastr.info(messageText);
+            } else if (messageType === 'warning'){
+                toastr.warning(messageText);
+            }
+        {% endfor %}
     });
 
 </script>

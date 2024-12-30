@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Contact Queries{% endblock %}
+{% block content %}
+        <div class="container">
+        <h2>Queries Section</h2>
+        <div class="table-responsive">
+            <table id="queriesTable" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Message</th>
+                        <th>Time Stamp</th>
+                        <th>Read</th>
+                        <th>Priority</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for contact_query in contact_queries %}
+                        <tr>
+                            <td>{{ contact_query.FirstName }}</td>
+                            <td>{{ contact_query.LastName }}</td>
+                            <td>{{ contact_query.email }}</td>
+                            <td>{{ contact_query.phone }}</td>
+                            <td>{{ contact_query.message|truncatewords:5 }}</td>
+                            <td>{{ contact_query.timestamp }}</td>
+                            <td>{{ contact_query.read }}</td>
+                            <td>{{ contact_query.priority }}</td>
+                            <td>
+                                <a href="tel:{{ contact_query.phone }}" class="btn btn-outline-primary btn-sm"><i class="fa fa-phone text-sm"></i></a>
+                                <button class="m-1 btn btn-outline-success btn-sm view-query"
+                                    data-fname="{{ contact_query.FirstName }}"
+                                    data-lname="{{ contact_query.LastName }}"
+                                    data-email="{{ contact_query.email }}"
+                                    data-phone="{{ contact_query.phone }}"
+                                    data-message="{{ contact_query.message }}"
+                                    data-date="{{ contact_query.timestamp }}"
+                                    data-priority="{{contact_query.priority}}">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm delete-query" data-id="{{contact_query.pk}}"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for viewing query details -->
+    <div class="modal fade" id="queryModal" tabindex="-1" aria-labelledby="queryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="queryModalLabel">Query Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>First Name:</strong> <span id="modalFName"></span></p>
+                    <p><strong>Last Name:</strong> <span id="modalLName"></span></p>
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+                    <p><strong>Message:</strong> <span id="modalMessage"></span></p>
+                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block extrascripts %}
+    <script src="{% static 'js/datatables.min.js' %}"></script>
+    <script src="{% static 'js/sweetalert.js' %}"></script>
+    <script>
+
+        $(document).ready(function() {
+            $('#queriesTable').DataTable({
+                "searching": true,
+                "ordering": true,
+                "lengthChange": false,
+                "pageLength": 5,
+                responsive: true
+            });
+
+            // Handle view query button click
+            $('.view-query').click(function() {
+                const fname = $(this).data('fname');
+                const lname = $(this).data('lname');
+                const email = $(this).data('email');
+                const phone = $(this).data('phone');
+                const message = $(this).data('message');
+                const date = $(this).data('date');
+                const priority = $(this).data('priority');
+
+                // Set modal content
+                $('#modalFName').text(fname);
+                $('#modalLName').text(lname);
+                $('#modalEmail').text(email);
+                $('#modalPhone').text(phone);
+                $('#modalMessage').text(message);
+                $('#modalDate').text(date);
+                $('#modalPriority').text(priority);
+
+                // Show modal
+                $('#queryModal').modal('show');
+            });
+
+            // Handle delete query button click
+            $('.delete-query').click(function() {
+                const queryId = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url 'delete_contact_query' %}',
+                            data: {
+                                id: queryId ,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire('Deleted!', response.message, 'success').then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire('Error!', response.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                Swal.fire('Error!', 'An error occurred while deleting the query.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

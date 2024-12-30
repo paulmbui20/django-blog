@@ -26,6 +26,9 @@
   font-size: 18px;
   z-index: 1000;
 }
+ .sticky-top{
+     z-index: 1;
+ }
 /* .toast-success{background-color: #0af60a*/
 /*}*/
 /*.toast-error{background-color: #f82217*/

@@ -6,28 +6,31 @@ from .models import BlogPost, Category, Contact, Comment
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-
-    list_display = ('title', 'created_at')
+    list_display = ('title', 'status', 'created_at', 'updated_at','categories', 'author')
     list_filter = ('status', 'categories')
+    list_editable = ('status',)
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ('title', 'content')
     actions = ['publish_posts']
+    list_per_page = 10
 
     def publish_posts(self, request, queryset):
         queryset.update(status='published')
         self.message_user(request, 'Selected posts have been published.')
-
     publish_posts.short_description = 'Publish selected posts'
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name','slug')
     prepopulated_fields = {'slug': ('name',)}
+    list_per_page = 10
+    search_fields = ('name',)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'comment', 'blog_post__title', 'created_at')
     list_filter = ('created_at',)
+    list_per_page = 10
 
 
 @admin.register(Contact)

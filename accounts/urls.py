@@ -6,7 +6,8 @@ from django.urls import path
 from blog import views
 from blog.views import add_post, update_post_status, add_category, analytics_dashboard
 from djangoBlog import settings
-from .views import register, account, logout_view, update_password, update_image, delete_image, profile
+from .views import register, account, logout_view, update_password, update_image, delete_image, profile, queries, \
+    delete_contact_query
 from django.contrib.auth import views as auth_views
 
 
@@ -29,6 +30,10 @@ urlpatterns = [
     path('profile/update-image/', update_image, name='update_image'),
     path('profile/delete-image/', delete_image, name='delete_image'),
 
-    path('update_post_status/', update_post_status, name='update_post_status'), # New URL pattern
+    path('update_post_status/', update_post_status, name='update_post_status'),
+
+    path('queries', queries, name='queries'),
+
+    path('delete_contact_query/', delete_contact_query, name='delete_contact_query'),
 
 ]
