@@ -80,9 +80,10 @@ class Contact(models.Model):
     email = models.EmailField(max_length=65)
     phone = PhoneNumberField()
     message = models.TextField()
-    timestamp = models.DateField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
+    time = models.TimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     priority = models.CharField(max_length=65, choices=priority_choices, default='normal')
 
     def __str__(self):
-        return f"{self.FirstName} - {self.timestamp}"
+        return f"{self.FirstName} - {self.date} - {self.time}"

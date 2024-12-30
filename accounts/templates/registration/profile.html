@@ -10,12 +10,16 @@
                 <div class="row">
                     <div class="p-3 col-md-4 border-right">
                         <label for="profileimage" class="h3 labels">Profile Image</label>
+                        {% if user.image %}
                        <img
                             id="profileimage"
                             class="rounded-circle mt-3"
                             width="50%"
-                            src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'default-profile.jpg' %}{% endif %}"
+                            src="{{ user.image.url }}"
                             alt="Profile Image">
+                        {% else %}
+                        <img class="rounded-circle w-50" src="{% static 'default-profile.jpg' %}" alt="user profile image">
+                        {% endif %}
                         <div class="mt-2">
                             <button type="button" class="btn btn-sm btn-outline-primary" id="updateImageBtn">
                                 <i class="bi bi-pencil-square"></i> Update Image
@@ -185,7 +189,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: 'POST',
-                    url: '{% url "update_password" %}',  // Use Django URL tags
+                    url: '{% url "update_password" %}',
                     data: $(this).serialize(),
                     success: function(response) {
                         if (response.success) {

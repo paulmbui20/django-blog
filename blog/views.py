@@ -249,9 +249,10 @@ def contactform(request):
         if form.is_valid():
             form.save()
             return JsonResponse({"success":True ,"message": "Message sent successfully!"}, status=200)
+        else:
+            return JsonResponse({"success": False, "message": "Invalid field input, check input."}, status=400)
     else:
-        return JsonResponse({"success": False, "message": "Invalid field input, check input."}, status=400)
-
+        return JsonResponse({"success": False, "message": "Invalid request method!"}, status=500)
 
 def contact(request):
     return render(request, 'contact.html', {'form': ContactForm()})

@@ -35,9 +35,9 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('id', 'FirstName', 'phone', 'email', 'timestamp', 'read', 'priority')
-    search_fields = ('FirstName', 'LastName', 'message')
-    list_filter = ('read', 'timestamp', 'priority')
+    list_display = ('id', 'FirstName', 'phone', 'email', 'date','time', 'read', 'priority')
+    search_fields = ('FirstName', 'LastName', 'message', 'email', 'phone')
+    list_filter = ('read', 'date', 'priority')
     list_editable = ('read',)
     actions = ['read_contact']
     list_display_links = ('id','FirstName',)

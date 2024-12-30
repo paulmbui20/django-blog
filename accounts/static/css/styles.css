@@ -27,7 +27,7 @@
   z-index: 1000;
 }
  .sticky-top{
-     z-index: 1;
+     z-index: 1;!important;
  }
 /* .toast-success{background-color: #0af60a*/
 /*}*/

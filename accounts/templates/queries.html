@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %} Contact Queries{% endblock %}
+{% block headtags %}
+    <link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
+{% endblock %}
 {% block content %}
         <div class="container">
         <h2>Queries Section</h2>
@@ -13,7 +16,8 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Message</th>
-                        <th>Time Stamp</th>
+                        <th>Date</th>
+                        <th>Time</th>
                         <th>Read</th>
                         <th>Priority</th>
                         <th>Actions</th>
@@ -27,7 +31,8 @@
                             <td>{{ contact_query.email }}</td>
                             <td>{{ contact_query.phone }}</td>
                             <td>{{ contact_query.message|truncatewords:5 }}</td>
-                            <td>{{ contact_query.timestamp }}</td>
+                            <td>{{ contact_query.date }}</td>
+                            <td>{{ contact_query.time }}</td>
                             <td>{{ contact_query.read }}</td>
                             <td>{{ contact_query.priority }}</td>
                             <td>
@@ -38,7 +43,9 @@
                                     data-email="{{ contact_query.email }}"
                                     data-phone="{{ contact_query.phone }}"
                                     data-message="{{ contact_query.message }}"
-                                    data-date="{{ contact_query.timestamp }}"
+                                    data-date="{{ contact_query.date }}"
+                                    data-time="{{ contact_query.time }}"
+                                    data-isread="{{ contact_query.read }}"
                                     data-priority="{{contact_query.priority}}">
                                     <i class="fa fa-eye"></i>
                                 </button>
@@ -66,6 +73,8 @@
                     <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
                     <p><strong>Message:</strong> <span id="modalMessage"></span></p>
                     <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
+                    <p><strong>Is Read:</strong> <span id="modalIsRead"></span></p>
                     <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
                 </div>
             </div>
@@ -84,6 +93,7 @@
                 "ordering": true,
                 "lengthChange": false,
                 "pageLength": 5,
+                "order": [[5, 'desc']],
                 responsive: true
             });
 
@@ -95,6 +105,8 @@
                 const phone = $(this).data('phone');
                 const message = $(this).data('message');
                 const date = $(this).data('date');
+                const time = $(this).data('time');
+                const isread = $(this).data('isread');
                 const priority = $(this).data('priority');
 
                 // Set modal content
@@ -104,6 +116,8 @@
                 $('#modalPhone').text(phone);
                 $('#modalMessage').text(message);
                 $('#modalDate').text(date);
+                $('#modalTime').text(time);
+                $('#modalIsRead').text(isread);
                 $('#modalPriority').text(priority);
 
                 // Show modal
