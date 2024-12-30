@@ -18,6 +18,9 @@
           <a class="nav-link" href="{% url 'category_list' %}">Categories</a>
         </li>
           <li class="nav-item">
+          <a class="nav-link" href="{% url 'search' %}">Search</a>
+        </li>
+          <li class="nav-item">
           <a class="nav-link" href="{% url 'authors_list' %}">Authors</a>
         </li>
           <li class="nav-item">
@@ -32,6 +35,7 @@
                 {% if user.is_authenticated %}
               <li><a class="dropdown-item" href="{% url 'account' %}">Dashboard</a></li>
                 {% if request.user.is_superuser or request.user.is_staff %}
+              <li><a class="dropdown-item" href="/admin/">Admin Dashboard</a></li>
               <li><a class="dropdown-item" href="{% url 'add_category' %}">Add Category</a></li>
               <li><a class="dropdown-item" href="{% url 'analytics_dashboard' %}">View Analytics</a></li>
               <li><a class="dropdown-item" href="{% url 'queries' %}">View Queries</a></li>

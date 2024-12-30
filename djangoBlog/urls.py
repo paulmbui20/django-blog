@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from blog.sitemaps import BlogPostSitemap
 from blog.views import category_view, contact, contactform, commentform, deletecomment
-from djangoBlog.views import index, author, authors_list_view, category_list_view
+from djangoBlog.views import index, author, authors_list_view, category_list_view, search
 
 sitemaps = { 'posts': BlogPostSitemap, }
 urlpatterns = [
@@ -21,6 +21,8 @@ urlpatterns = [
     path('authors/', authors_list_view, name='authors_list'),
     path('categories/', category_list_view, name='category_list'),
     path('category/<slug:slug>/', category_view, name='category_detail'),
+
+    path('search/', search, name='search'),
     path('contact/', contact, name='contact'),
     path('contactform/', contactform, name='contactform'),
 

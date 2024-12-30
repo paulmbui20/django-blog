@@ -5,7 +5,7 @@
     {% trans "Sign In" %}
 {% endblock title %}
 {% block content %}
-        <div class="container col-md-10 mx-auto shadow-sm py-5 px-5 text-center my-3 rounded ">
+        <div class="container col-md-5 mx-auto shadow-lg py-5 px-5 text-center my-3 rounded-3 ">
             {% if process == "connect" %}
                 {% element h1 %}
                     {% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}

@@ -1,7 +1,26 @@
 {% load static %}
 <!-- Search Bar -->
-<input type="text" id="search" class="form-control my-2" placeholder="Type to Search Blog Posts...">
-
+        <form method="get" action="{% url 'search' %}">
+            <div class="form-group">
+                <label for="search">Search Posts</label>
+                <div class="input-group align-items-center">
+                <input
+                    type="text"
+                    id="search"
+                    value="{{ query }}"
+                    name="q"
+                    class="form-control my-2"
+                    placeholder="Type to Search Blog Posts...">
+            <span>
+                <div  class="input-group-text bg-transparent">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </span>
+                </div>
+            </div>
+        </form>
 <!-- Display Search Results -->
 <ul id="search-results" class="list-group mt-2"></ul>
 

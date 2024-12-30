@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 
 from accounts.models import CustomUser
@@ -97,3 +98,20 @@ def category_list_view(request):
         'page_obj': page_obj,
     }
     return render(request, 'category_list.html', context)
+
+def search (request):
+    query = request.GET.get('q', '')
+    if query:
+        results = (BlogPost.objects.filter(
+            Q(title__icontains=query) , status='published')
+                   .order_by('-created_at'))
+        paginator = Paginator(results, 16)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'page_obj': page_obj,
+            'query': query,
+        }
+        return render(request, 'search.html', context)
+    else:
+        return render(request, 'search.html')

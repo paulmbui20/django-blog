@@ -136,7 +136,7 @@ def category_view(request, slug):
 def search_posts(request):
     query = request.GET.get('q', '').strip()
     if query:
-        results = BlogPost.objects.filter(title__icontains=query, status='published').values('id', 'title', 'slug', 'updated_at')
+        results = BlogPost.objects.filter(title__icontains=query, status='published').values('id', 'title', 'slug', 'updated_at')[:5]
         return JsonResponse(list(results), safe=False)
     return JsonResponse([], safe=False)  # Return an empty list if no query
 
