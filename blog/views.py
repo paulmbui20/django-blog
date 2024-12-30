@@ -90,11 +90,27 @@ def commentform(request, slug):
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Comment successfully saved')
-                return redirect( 'blogpost_detail', slug=slug)
+                return redirect('blogpost_detail', slug=slug)
             else:
                 messages.error(request, 'Please check your input')
+                return redirect('blogpost_detail', slug=slug)
         else:
             messages.error(request, 'Error')
+
+def deletecomment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post_slug = request.POST.get('post_slug')
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            comment.delete()
+            messages.success(request, 'Comment successfully deleted')
+            return redirect('blogpost_detail', slug=post_slug)
+        else:
+            messages.error(request, 'Invalid request')
+            return redirect('blogpost_detail', slug=post_slug)
+    else:
+        messages.error(request, 'You are not authorized to perform this action')
+        return redirect('blogpost_detail', slug=post_slug)
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     posts = BlogPost.objects.filter(categories=category,status='published').order_by('-created_at')  # Only show published posts

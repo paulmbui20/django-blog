@@ -7,7 +7,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from blog.sitemaps import BlogPostSitemap
-from blog.views import category_view, contact, contactform, commentform
+from blog.views import category_view, contact, contactform, commentform, deletecomment
 from djangoBlog.views import index, author, authors_list_view, category_list_view
 
 sitemaps = { 'posts': BlogPostSitemap, }
@@ -25,6 +25,8 @@ urlpatterns = [
     path('contactform/', contactform, name='contactform'),
 
     path('commentform/post/<str:slug>', commentform, name='commentform'),
+
+    path('deletecomment/<int:pk>', deletecomment, name='deletecomment'),
 
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
