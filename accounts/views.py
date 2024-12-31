@@ -103,17 +103,14 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated successfully!')
-            return redirect('profile')  # Redirect to the profile page
+            return redirect('profile')
     else:
         form = ProfileForm(instance=user)
-    profile_image_url = user.image.url if user.image else '/static/default-profile.jpg'
 
     return render(request, 'registration/profile.html', {
         'user': user,
-        'profile_image_url': profile_image_url,
         'form': form
     })
-
 
 @login_required
 def update_image(request):

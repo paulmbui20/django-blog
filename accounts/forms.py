@@ -89,6 +89,7 @@ class ProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Bio',
                 'id': 'floatingBio',
+                'rows': 5,
             }),
             'website': forms.URLInput(attrs={
                 'class': 'form-control',

@@ -5,6 +5,8 @@ from django.utils.text import slugify
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=65, unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     bio = models.TextField(null=True, blank=True)
     gender = models.CharField(max_length=10, null=True, blank=True, choices=(('M', 'Male'), ('F', 'Female')))
     image = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
