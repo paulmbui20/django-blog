@@ -22,8 +22,10 @@
             <tr>
                 <th>Title</th>
                 <th>Status</th>
+                {% if request.user.is_superuser or request.user.is_staff %}
                 <th>Author</th>
                 <th>Created at</th>
+                {% endif %}
                 <th>Last Edited</th>
                 <th>Actions</th>
             </tr>
@@ -31,7 +33,9 @@
         <tbody>
             {% for post in posts %}
             <tr>
-                <td>{{ post.title }}</td>
+                <td>
+                    <a href="{% url 'blogpost_detail' post.slug %}" target="_blank">{{ post.title }}</a>
+                </td>
                 <td>
                     {% if request.user.is_superuser or request.user.is_staff %}
                         <select class="form-select status-select {{ post.status }}" data-post-id="{{ post.id }}">
@@ -47,28 +51,25 @@
                         </span>
                     {% endif %}
                 </td>
+                {% if request.user.is_superuser or request.user.is_staff %}
                 <td>
                     <a href="{% url 'author' post.author.username %}">{{ post.author }}</a>
                 </td>
                 <td>{{ post.created_at }}</td>
+                {% endif %}
                 <td>{{ post.updated_at }}</td>
                 <td>
-                    <!-- View Button -->
-                    <a class="my-1 btn btn-outline-success" href="/posts/{{post.slug}}/">
-                        <i class="fa fa-eye"></i>
-                    </a>
                     <!-- Edit Button -->
-                    <a href="{% url 'edit_post' post.id %}" class="my-1 btn btn-warning">
+                    <a href="{% url 'edit_post' post.id %}" class="my-1 btn btn-sm btn-warning">
                         <i class="fa fa-pen"></i>
                     </a>
                     <!-- Delete Button -->
-                    <button class="my-1 btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ post.id }}">
+                    <button class="my-1 btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ post.id }}">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
             </tr>
-
-            <!-- Delete Modal -->
+                            <!-- Delete Modal -->
             <div class="modal fade" id="deleteModal-{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -113,7 +114,11 @@
                 "ordering": true,
                 "lengthChange": true,
                 "pageLength": 20,
+                {% if request.user.is_superuser or request.user.is_staff %}
                 "order": [[4, 'desc']],
+                {% else %}
+                "order": [[2, 'desc']],
+            {% endif %}
                 responsive: true
             });
             function updateStatusColor(element, status) {

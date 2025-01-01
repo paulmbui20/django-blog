@@ -56,9 +56,15 @@ class CustomAuthenticationForm(AuthenticationForm):
     }))
 
 class ProfileForm(forms.ModelForm):
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError("This email is already taken.")
+        return email
+
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'username', 'email', 'phone', 'bio', 'website', 'gender'  ]
+        fields = ['first_name', 'last_name', 'email', 'phone', 'bio', 'website', 'gender'  ]
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -69,11 +75,6 @@ class ProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Last Name',
                 'id': 'floatingLastName',
-            }),
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Username',
-                'id': 'floatingUsername',
             }),
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',

@@ -32,7 +32,7 @@
 
                     <div class="d-flex flex-column p-3 col-md-8">
                         <h3>Update Details</h3>
-    <form method="post" novalidate id="profileEditForm">
+    <form method="post" novalidate id="profileEditForm" action="{% url 'profile' %}">
         {% csrf_token %}
         {{ form.non_field_errors }}
         <div class="row d-flex flex-row">
@@ -54,9 +54,9 @@
         <div class="row d-flex form-row">
             <div class="col-md-6">
                 <div class=" mb-3">
-                    {{ form.username.label_tag }}
-                    {{ form.username }}
-                    {{ form.username.errors }}
+            {{ form.gender.label_tag }}
+            {{ form.gender }}
+            {{ form.gender.errors }}
                 </div>
             </div>
             <div class="col-md-6">
@@ -83,11 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class=" mb-3">
-            {{ form.gender.label_tag }}
-            {{ form.gender }}
-            {{ form.gender.errors }}
-        </div>
+
         <div class=" mb-3">
             {{ form.bio.label_tag }}
             {{ form.bio }}
@@ -168,22 +164,6 @@
 {% block extrascripts %}
     <script src="{% static 'js/sweetalert.js' %}"></script>
         <script>
-        $('#profileEditForm').on('submit', function(e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '{% url "profile" %}',
-                data: $(this).serialize(),
-                success: function(response) {
-                    Swal.fire('Success!', 'Profile updated successfully.', 'success')
-                        .then(() => location.reload());
-                },
-                error: function() {
-                    Swal.fire('Error!', 'Failed to update profile.', 'error');
-                }
-            });
-        });
-
         $(document).ready(function() {
             $('#passwordForm').on('submit', function(e) {
                 e.preventDefault();

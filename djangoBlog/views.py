@@ -5,7 +5,6 @@ from django.shortcuts import render, get_object_or_404
 from accounts.models import CustomUser
 from blog.models import BlogPost, Category
 
-from django.contrib.auth import get_user_model
 
 def index(request):
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]

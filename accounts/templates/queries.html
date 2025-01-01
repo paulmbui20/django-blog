@@ -5,6 +5,29 @@
     <link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
 {% endblock %}
 {% block content %}
+        <!-- Modal for viewing query details -->
+    <div class="modal fade" id="queryModal" tabindex="-1" aria-labelledby="queryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="queryModalLabel">Query Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>First Name:</strong> <span id="modalFName"></span></p>
+                    <p><strong>Last Name:</strong> <span id="modalLName"></span></p>
+                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
+                    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
+                    <p><strong>Message:</strong> <span id="modalMessage"></span></p>
+                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
+                    <p><strong>Is Read:</strong> <span id="modalIsRead"></span></p>
+                    <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <div class="container">
         <h2>Queries Section</h2>
         <div class="table-responsive">
@@ -58,35 +81,11 @@
         </div>
     </div>
 
-    <!-- Modal for viewing query details -->
-    <div class="modal fade" id="queryModal" tabindex="-1" aria-labelledby="queryModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="queryModalLabel">Query Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>First Name:</strong> <span id="modalFName"></span></p>
-                    <p><strong>Last Name:</strong> <span id="modalLName"></span></p>
-                    <p><strong>Email:</strong> <span id="modalEmail"></span></p>
-                    <p><strong>Phone:</strong> <span id="modalPhone"></span></p>
-                    <p><strong>Message:</strong> <span id="modalMessage"></span></p>
-                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
-                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
-                    <p><strong>Is Read:</strong> <span id="modalIsRead"></span></p>
-                    <p><strong>Priority:</strong> <span id="modalPriority"></span></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 {% block extrascripts %}
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script src="{% static 'js/sweetalert.js' %}"></script>
     <script>
-
         $(document).ready(function() {
             $('#queriesTable').DataTable({
                 "searching": true,
@@ -94,7 +93,7 @@
                 "lengthChange": false,
                 "pageLength": 5,
                 "order": [[5, 'desc']],
-                responsive: true
+                {#responsive: true#}
             });
 
             // Handle view query button click
@@ -163,5 +162,4 @@
             });
         });
     </script>
-
 {% endblock %}

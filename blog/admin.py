@@ -6,7 +6,7 @@ from .models import BlogPost, Category, Contact, Comment
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'status', 'created_at', 'updated_at','categories', 'author')
+    list_display = ('title', 'status', 'created_at', 'updated_at','featured_image','categories', 'author')
     list_filter = ('status', 'categories')
     list_editable = ('status',)
     prepopulated_fields = {'slug': ('title',)}
@@ -21,7 +21,7 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name','slug')
+    list_display = ('name','slug', 'categoryImage')
     prepopulated_fields = {'slug': ('name',)}
     list_per_page = 10
     search_fields = ('name',)
