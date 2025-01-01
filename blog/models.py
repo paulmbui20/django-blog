@@ -13,7 +13,7 @@ class Category(models.Model):
     categoryImage = models.ImageField(upload_to="category_images/", null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if self.name:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
@@ -38,7 +38,7 @@ class BlogPost(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts')
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if self.title:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 

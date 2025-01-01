@@ -9,13 +9,12 @@ from django.contrib.auth import get_user_model
 
 def index(request):
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]
-    posts = BlogPost.objects.filter(status='published').order_by('-created_at') [:8]
+    posts = BlogPost.objects.filter(status='published').order_by('-created_at') [:12]
     categories = Category.objects.all()[:4]
     context = { 'recent_posts': recent_posts, 'categories': categories, 'posts': posts}
     return render(request, 'index.html', context)
 
 
-CustomUser = get_user_model()
 def author(request, slug):
     # Retrieve the author by username (slug)
     author = get_object_or_404(CustomUser, username=slug)
@@ -41,6 +40,7 @@ def author(request, slug):
 def authors_list_view(request):
     authors = CustomUser.objects.all()
     author_details = []
+
 
     for author in authors:
         author_posts = BlogPost.objects.filter(author=author, status='published').count()

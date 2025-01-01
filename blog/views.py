@@ -178,7 +178,10 @@ def add_post(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user  # Set the author as the logged-in user
-            post.status = 'pending'  # Set default status to 'pending'
+            if post.author.is_superuser:
+                post.status = 'published'  # Set default status to 'pending'
+            else:
+                post.status = 'pending'
             post.save()
             form.save_m2m()  # Save the many-to-many data
             messages.success(request, 'Your post has been submitted for review.')
@@ -199,10 +202,11 @@ def edit_post(request, post_id):
 
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
-        if post.author != request.user.is_superuser:
-            post.status = 'pending'
-        else:
+        if request.user.is_superuser:
             post.status = 'published'
+        elif post.author != request.user.is_superuser:
+            post.status = 'pending'
+
         if form.is_valid():
             form.save()
             messages.success(request, "Post updated successfully.")

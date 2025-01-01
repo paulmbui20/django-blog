@@ -24,6 +24,7 @@
                 <th>Status</th>
                 <th>Author</th>
                 <th>Created at</th>
+                <th>Last Edited</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -50,6 +51,7 @@
                     <a href="{% url 'author' post.author.username %}">{{ post.author }}</a>
                 </td>
                 <td>{{ post.created_at }}</td>
+                <td>{{ post.updated_at }}</td>
                 <td>
                     <!-- View Button -->
                     <a class="my-1 btn btn-outline-success" href="/posts/{{post.slug}}/">
@@ -105,30 +107,27 @@
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script src="{% static 'js/sweetalert.js' %}"></script>
     <script>
-      $('#postsTable').DataTable({
-        "searching": true,
-        "ordering": true,
-        "lengthChange": false,
-        "pageLength": 5,
-        "order": [[1, 'desc']],
-        responsive: true
-    });
-
-    function updateStatusColor(element, status) {
-    element.removeClass('published pending text-success text-danger');
-    if (status === 'published') {
-    element.addClass('published text-success');
-} else if (status === 'pending') {
-    element.addClass('pending text-danger');
-}
-}
-
-    $('.status-select').each(function() {
-    var status = $(this).val();
-    updateStatusColor($(this), status);
-});
-
-    $('.status-select').change(function() {
+        $(document).ready(function() {
+            $('#postsTable').DataTable({
+                "searching": true,
+                "ordering": true,
+                "lengthChange": true,
+                "pageLength": 20,
+                "order": [[4, 'desc']],
+                responsive: true
+            });
+            function updateStatusColor(element, status) {
+                element.removeClass('published pending text-success text-danger');
+                if (status === 'published') {
+                    element.addClass('published text-success');
+                } else if (status === 'pending') {element.addClass('pending text-danger');
+                }
+            }
+            $('.status-select').each(function() {
+                var status = $(this).val();
+                updateStatusColor($(this), status);
+            });
+            $('.status-select').change(function() {
     var postId = $(this).data('post-id');
     var newStatus = $(this).val();
     $.ajax({
@@ -159,7 +158,7 @@
 }
 });
             });
+        });
     </script>
-
 
 {% endblock %}
