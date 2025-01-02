@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-10 mb-3">
       <h1>{{ post.title }}</h1>
-    <div class="d-md-flex align-items-center my-2">
+    <div class="d-flex align-items-center my-2">
         {% if post.author.image %}
             <img src="{{ post.author.image.url }}" alt="{{ post.author.username }}" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
         {% else %}
@@ -28,8 +28,8 @@
         <a href="/author/{{ post.author.username }}/" class="text-decoration-none">
             <p><strong>Author</strong>: {% if post.author.first_name %}{{ post.author.first_name }} {% if post.author.last_name %}{{ post.author.last_name | truncatechars:2 | upper }}{% endif %}{% else %}{{ post.author.username }}{% endif %}</p>
         </a>
-        <p class="mx-md-3"><strong>Last Modified:</strong> {{ post.updated_at }}</p>
-
+        <p class="mx-3"><i class="fa fa-calendar-day"></i> {{ post.updated_at }}</p>
+        <p class="mx-1"><i class="fa fa-message"></i> {{ comments_count }}</p>
     </div>
 
       <img
@@ -135,8 +135,8 @@
               <div class="mb-3">
                   <label for="name">Name</label>
                    <input
-                           {% if user.is_authenticated and request.user.first_name %}
-                               value="{{ user.first_name }}"
+                           {% if user.is_authenticated and user.first_name %}
+                               value="{{ user.first_name }} {% if user.last_name %}{{ user.last_name }}{% endif %} "
                                readonly
                            {% endif %}
                             placeholder="Enter Your Name"
