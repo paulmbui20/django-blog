@@ -53,7 +53,7 @@ def authors_list_view(request):
                 'image': author.image,
                 'post_count': author_posts
             })
-    paginator = Paginator(authors, 16)  #pagination to show 16 posts per page
+    paginator = Paginator(authors, 16) #pagination to show 16 posts per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     breadcrumbs = [

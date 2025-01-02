@@ -56,12 +56,6 @@ class CustomAuthenticationForm(AuthenticationForm):
     }))
 
 class ProfileForm(forms.ModelForm):
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if CustomUser.objects.filter(email=email).exists():
-            raise ValidationError("This email is already taken.")
-        return email
-
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'phone', 'bio', 'website', 'gender'  ]

@@ -17,6 +17,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
+from accounts.models import CustomUser
 from .forms import BlogPostForm, ContactForm, CategoryForm, CommentForm
 from .models import BlogPost, Category, AnalyticsData, Comment
 
@@ -55,7 +56,7 @@ def BlogPostDetailView(request, slug):
     # Additional data
     categories = Category.objects.all()
     recent_posts = BlogPost.objects.filter(status='published').order_by('-created_at')[:5]  # Last 5 published posts
-    comments = Comment.objects.filter(blog_post=post).order_by('-created_at')
+    comments = Comment.objects.filter(blog_post=post).order_by('-created_at')[:10]
     comments_count = comments.count()
     # Get related posts based on the category
     related_posts = BlogPost.objects.filter(
@@ -87,20 +88,38 @@ def BlogPostDetailView(request, slug):
 def commentform(request, slug):
         if request.method == 'POST':
             form = CommentForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Comment successfully saved')
-                return redirect('blogpost_detail', slug=slug)
+            email = request.POST.get('email')
+            user1 = get_object_or_404(CustomUser, email=email)
+            if user1:
+                if request.user.is_authenticated:
+                    if form.is_valid():
+                        comment = form.save(commit=False)
+                        comment.author = request.user
+                        comment.save()
+                        form.save_m2m()
+                        messages.success(request, 'Your comment has been submitted')
+                        return redirect('blogpost_detail', slug=slug)
+                    else:
+                        messages.error(request, 'Invalid input')
+                        return redirect('blogpost_detail', slug=slug)
+                else:
+                    messages.info(request, 'You have an existing Account, please login to continue')
+                    return redirect('login')
             else:
-                messages.error(request, 'Please check your input')
-                return redirect('blogpost_detail', slug=slug)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, 'Comment successfully saved')
+                    return redirect('blogpost_detail', slug=slug)
+                else:
+                    messages.error(request, 'Please check your input')
+                    return redirect('blogpost_detail', slug=slug)
         else:
             messages.error(request, 'Error')
 
 def deletecomment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     post_slug = request.POST.get('post_slug')
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.is_staff or request.user == comment.author:
         if request.method == 'POST':
             comment.delete()
             messages.success(request, 'Comment successfully deleted')

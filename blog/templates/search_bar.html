@@ -1,5 +1,16 @@
 {% load static %}
 <!-- Search Bar -->
+    <style>
+    #search:focus{
+        box-shadow: none;
+    }
+   #searchbtn:focus-visible{
+        box-shadow: none;
+    }
+   #searchcontainer{
+       display: none;
+   }
+    </style>
         <form method="get" action="{% url 'search' %}">
             <div class="form-group">
                 <label for="search">Search Posts</label>
@@ -9,11 +20,11 @@
                     id="search"
                     value="{{ query }}"
                     name="q"
-                    class="form-control my-2"
-                    placeholder="Type to Search Blog Posts...">
+                    class="form-control my-2 border-primary "
+                    placeholder="Type to Search Posts... Press Enter to views more">
             <span>
                 <div  class="input-group-text bg-transparent p-0">
-                    <button type="submit" class="btn btn-outline-primary rounded-start-0 rounded-end">
+                    <button id="searchbtn" type="submit" class="btn btn-primary rounded-start-0 rounded-end">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
@@ -22,7 +33,10 @@
             </div>
         </form>
 <!-- Display Search Results -->
-<ul id="search-results" class="list-group mt-2"></ul>
+<div class="z-3 " id="searchcontainer">
+    <ul id="search-results" class="dropdown-menu list-group bg-transparent border-0"></ul>
+
+</div>
 
 <!-- AJAX for Search Functionality -->
 <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
@@ -30,7 +44,7 @@
   $(document).ready(function() {
     $('#search').on('keyup', function() {
       var query = $(this).val();
-      if (query.length > 2) {  // Start searching after 3 characters
+      if (query.length > 1) {  // Start searching after 2 characters
         $.ajax({
           url: "{% url 'search_posts' %}",
           data: {
@@ -39,18 +53,22 @@
           success: function(data) {
             $('#search-results').html('');
             if (data.length > 0) {
+                $('#searchcontainer').css('display', 'flex');
               data.forEach(function(post) {
-                $('#search-results').append('<li class="list-group-item mb-2 shadow-sm"><a href="/posts/' + post.slug + '/" class="text-decoration-none">' + post.title + '</a></li>');
+                $('#search-results').append('<li class="list-group-item"><a href="/posts/' + post.slug + '/" class="text-decoration-none ">' + post.title + '</a></li>');
               });
             } else {
-              $('#search-results').html('<div class="alert alert-warning">No results found</div>'); //no results case
+                $('#searchcontainer').css('display', 'flex');
+                $('#search-results').html('<div class="alert alert-warning">No results found</div>'); //no results case
             }
           },
           error: function() {
+              $('#searchcontainer').css('display', 'flex');
             $('#search-results').html('<div class="alert alert-danger">An error occurred while searching. Please try again.</div>'); // Handle errors gracefully
           }
         });
       } else {
+          $('#searchcontainer').css('display', 'none');
         $('#search-results').html('');
       }
     });

@@ -9,6 +9,14 @@
 
 {% block content %}
 {% include 'breadcrumb.html' %}
+    <style>
+    #search:focus{
+        box-shadow: none;
+    }
+    #searchbtn:focus-visible{
+        box-shadow: none;
+    }
+    </style>
     <div class="container text-center">
     {% if query %}
         <h1>Search results for {{ query }}</h1>
@@ -27,11 +35,11 @@
                     id="search"
                     value="{{ query }}"
                     name="q"
-                    class="form-control my-2"
+                    class="form-control my-2 border-primary"
                     placeholder="Type to Search Blog Posts...">
             <span>
                 <div  class="input-group-text bg-transparent p-0">
-                    <button type="submit" class="btn btn-outline-primary rounded-start-0 rounded-end">
+                    <button id="searchbtn" type="submit" class="btn btn-primary rounded-start-0 rounded-end">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
