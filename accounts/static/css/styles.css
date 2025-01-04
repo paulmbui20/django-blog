@@ -28,6 +28,16 @@
  .sticky-top{
      z-index: 1;!important;
  }
+
+ [data-bs-theme=dark] .carousel .carousel-control-next-icon,
+ [data-bs-theme=dark] .carousel .carousel-control-prev-icon,
+ [data-bs-theme=dark].carousel .carousel-control-next-icon,
+ [data-bs-theme=dark].carousel .carousel-control-prev-icon {
+     filter:;
+}
+ [data-bs-theme=dark] .carousel .carousel-indicators [data-bs-target], [data-bs-theme=dark].carousel .carousel-indicators [data-bs-target] {
+     background-color: #fff;
+}
 /* .toast-success{background-color: #0af60a*/
 /*}*/
 /*.toast-error{background-color: #f82217*/

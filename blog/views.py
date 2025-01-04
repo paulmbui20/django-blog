@@ -88,11 +88,15 @@ def BlogPostDetailView(request, slug):
 def commentform(request, slug):
         if request.method == 'POST':
             form = CommentForm(request.POST)
-            email = request.POST.get('email')
-            user1 = get_object_or_404(CustomUser, email=email)
+            form_email = request.POST.get('email')
+            user1 = get_object_or_404(CustomUser, email=form_email)
+
             if user1:
                 if request.user.is_authenticated:
-                    if form.is_valid():
+                    if form_email != request.user.email:
+                        messages.error(request, 'Email address does not match')
+                        return redirect('blogpost_detail', slug=slug)
+                    elif form.is_valid():
                         comment = form.save(commit=False)
                         comment.author = request.user
                         comment.save()

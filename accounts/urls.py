@@ -7,7 +7,7 @@ from blog import views
 from blog.views import add_post, update_post_status, add_category, analytics_dashboard
 from djangoBlog import settings
 from .views import register, account, logout_view, update_password, update_image, delete_image, profile, queries, \
-    delete_contact_query
+    delete_contact_query, update_email
 from django.contrib.auth import views as auth_views
 
 
@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('profile/',profile, name='profile'),
     path('profile/update-password/', update_password, name='update_password'),
+    path('profile/update-email/', update_email, name='update_email'),
     path('profile/update-image/', update_image, name='update_image'),
     path('profile/delete-image/', delete_image, name='delete_image'),
 

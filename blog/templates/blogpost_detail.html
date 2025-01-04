@@ -28,7 +28,7 @@
         <a href="/author/{{ post.author.username }}/" class="text-decoration-none">
             <p><strong>Author</strong>: {% if post.author.first_name %}{{ post.author.first_name }} {% if post.author.last_name %}{{ post.author.last_name | truncatechars:2 | upper }}{% endif %}{% else %}{{ post.author.username }}{% endif %}</p>
         </a>
-        <p class="mx-3"><i class="fa fa-calendar-day"></i> {{ post.updated_at }}</p>
+        <p class="mx-3"><i class="fa fa-calendar-day"></i> {{ post.updated_at|date }}</p>
         <p class="mx-1"><i class="fa fa-message"></i> {{ comments_count }}</p>
     </div>
 

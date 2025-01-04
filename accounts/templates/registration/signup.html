@@ -13,13 +13,14 @@
   <button class="btn btn-primary w-50 py-2" type="submit">Register</button>
       <span class="mx-3">OR </span>
     <a href="{% url 'login' %}" class="fw-bold">Log in</a>
-      <div class="text-center">
-      <p>or login with</p>
-<a href="{% provider_login_url 'google' %}" class="btn btn-danger">
-    <i class="fa-brands fa-google"></i> Google
-      </a>
+      <div class="text-center my-2">
+          <p>Or use </p>
+          <a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+              <i class="fa-brands fa-google"></i> Google
+          </a>
+
   </div>
-    <p class="my-3 text-center text-body-secondary">&copy; 2024</p>
+    <p class="my-1 text-center text-body-secondary">&copy; 2024</p>
 
 </form>
 

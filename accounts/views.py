@@ -1,6 +1,7 @@
 import os
 
 from django.contrib.auth import update_session_auth_hash, login, authenticate, get_backends
+from django.core.validators import validate_email
 from django.http import JsonResponse
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,6 +15,9 @@ from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm
 import jwt
 from datetime import datetime, timedelta
 from django.conf import settings
+
+from .models import CustomUser
+
 
 def register(request):
     if request.method == "POST":
@@ -94,7 +98,30 @@ def update_password(request):
 
     return JsonResponse({"success": False, "message": "Invalid request."})
 
+@login_required
+def update_email(request):
+    if request.method == "POST":
+        old_email = request.POST.get("email")
+        new_email = request.POST.get("newemail")
+        dbuser = get_object_or_404(CustomUser, email=old_email)
+        useremail = request.user.email
 
+        if old_email != useremail:
+            return JsonResponse({"success": False, "message": "Old email is incorrect."})
+        if old_email =='' or new_email == '':
+            return JsonResponse({"success": False, "message": "All fields are required."})
+        if old_email == new_email:
+            return JsonResponse({"success": False, "message": "Both Email addresses are similar"})
+        if dbuser is not None:
+            if CustomUser.objects.filter(email=new_email).exists():
+                return JsonResponse({"success": False, "message": "Email already exists."})
+            dbuser.email = new_email
+            dbuser.save()
+            return JsonResponse({"success": True, "message": "Email updated successfully."})
+        else:
+            return JsonResponse({"success": False, "message": "Email does not exist."})
+    else:
+        return JsonResponse({"success": False, "message": "Invalid request."})
 @login_required
 def profile(request):
     user = request.user

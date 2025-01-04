@@ -9,7 +9,7 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="p-3 col-md-4 border-right">
-                        <label for="profileimage" class="h3 labels">Profile Image</label>
+                        <h3> Profile Picture</h3>
                         {% if user.image %}
                        <img
                             id="profileimage"
@@ -18,7 +18,7 @@
                             src="{{ user.image.url }}"
                             alt="Profile Image">
                         {% else %}
-                        <img class="rounded-circle w-50" src="{% static 'default-profile.jpg' %}" alt="user profile image">
+                        <img id="profileimage" class="rounded-circle w-50" src="{% static 'default-profile.jpg' %}" alt="user profile image">
                         {% endif %}
                         <div class="mt-2">
                             <button type="button" class="btn btn-sm btn-outline-primary" id="updateImageBtn">
@@ -29,80 +29,71 @@
                             </button>
                         </div>
                     </div>
-
                     <div class="d-flex flex-column p-3 col-md-8">
                         <h3>Update Details</h3>
-    <form method="post" novalidate id="profileEditForm" action="{% url 'profile' %}">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="row d-flex flex-row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form.first_name.label_tag }}
-                    {{ form.first_name }}
-                    {{ form.first_name.errors }}
-                </div>
-                </div>
-            <div class="col-md-6">
-                <div class=" mb-3">
-                    {{ form.last_name.label_tag }}
-                    {{ form.last_name }}
-                    {{ form.last_name.errors }}
-                </div>
-            </div>
-        </div>
-        <div class="row d-flex form-row">
-            <div class="col-md-6">
-                <div class=" mb-3">
-            {{ form.gender.label_tag }}
-            {{ form.gender }}
-            {{ form.gender.errors }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
-                    {{ form.email.errors }}
-                </div>
-            </div>
-        </div>
-        <div class="row d-flex form-row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form.phone.label_tag }}
-                    {{ form.phone }}
-                    {{ form.phone.errors }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class=" mb-3">
-                    {{ form.website.label_tag }}
-                    {{ form.website }}
-                    {{ form.website.errors }}
-                </div>
-            </div>
-        </div>
+                        <form method="post" id="profileEditForm" action="{% url 'profile' %}">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="row d-flex flex-row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        {{ form.first_name.label_tag }}
+                                        {{ form.first_name }}
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                    </div>
+                                <div class="col-md-6">
+                                    <div class=" mb-3">
+                                        {{ form.last_name.label_tag }}
+                                        {{ form.last_name }}
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex form-row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        {{ form.phone.label_tag }}
+                                        {{ form.phone }}
+                                        {{ form.phone.errors }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                <div class=" mb-3">
+                                    {{ form.website.label_tag }}
+                                    {{ form.website }}
+                                    {{ form.website.errors }}
+                                </div>
+                            </div>
+                        </div>
 
-        <div class=" mb-3">
-            {{ form.bio.label_tag }}
-            {{ form.bio }}
-            {{ form.bio.errors }}
-        </div>
-
-
-        <button type="submit" class="btn btn-primary">Update Profile</button>
-    </form>
+                            <div class=" mb-3">
+                                {{ form.gender.label_tag }}
+                                {{ form.gender }}
+                                {{ form.gender.errors }}
+                            </div>
+                            <div class=" mb-3">
+                                {{ form.bio.label_tag }}
+                                {{ form.bio }}
+                                {{ form.bio.errors }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="col-md-2 p-3">
-                <h3>Change Password</h3>
-                <button class="btn btn-sm btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropLive">Change Password</button>
+                {% if user.password %}
+                <h3 class="mb-1">Change Password</h3>
+                <button class="btn btn-sm btn-outline-danger mb-3" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropLive">Change Password</button>
+                {% endif %}
+                <h3 class="mb-1">Change Email</h3>
+                <button id="changeEmailBtn" class="btn btn-sm btn-outline-info mb-3" type="button" data-bs-toggle="modal" data-bs-target="#changeEmailModal">Change Email</button>
             </div>
         </div>
     </div>
 
+    {% if user.password %}
     <div class="modal fade" id="staticBackdropLive" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLiveLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -126,6 +117,38 @@
                             <label for="confirm_password" class="form-label">Confirm New Password</label>
                             <input type="password" name="confirm_password" class="form-control" id="confirm_password" required>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="modal fade" id="changeEmailModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changeEmailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title fs-5" id="changeEmailModalLabel">Update password</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changeEmailForm" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Old Email</label>
+                            <input type="email" name="email" class="form-control" id="email" value="{{ user.email }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newemail" class="form-label">New Email</label>
+                            <input type="email" name="newemail" class="form-control" id="newemail">
+                        </div>
+{#                        <div class="mb-3">#}
+{#                            <label for="confirm_email" class="form-label">Confirm Email</label>#}
+{#                            <input type="text" name="confirm_email" class="form-control" id="confirm_email" required>#}
+{#                        </div>#}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary">Update</button>
@@ -163,7 +186,7 @@
 {% endblock %}
 {% block extrascripts %}
     <script src="{% static 'js/sweetalert.js' %}"></script>
-        <script>
+    <script>
         $(document).ready(function() {
             $('#passwordForm').on('submit', function(e) {
                 e.preventDefault();
@@ -184,72 +207,46 @@
                     }
                 });
             });
-
-
-            // Handle image update
-    $('#updateImageBtn').on('click', function() {
-        $('#updateImageModal').modal('show');
-    });
-
-$('#imageForm').on('submit', function(e) {
-    e.preventDefault(); // Prevent the default form submission
-    var formData = new FormData(this);
-    $.ajax({
-        type: 'POST',
-        url: '{% url "update_image" %}', // Ensure this matches your URL pattern
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: response.message,
-                    icon: 'success'
-                }).then(() => {
-                    location.reload(); // Reload the page to reflect changes
+            $('changeEmailBtn').on('click', function() {
+            $('#changeEmailModal').modal('show');
+        });
+            $('#changeEmailForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "update_email" %}',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire('Success!', response.message, 'success')
+                                .then(() => window.location.href = '{% url "logout" %}');
+                        } else {
+                            Swal.fire('Error!', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+                    }
                 });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: response.message,
-                    icon: 'error'
-                });
-            }
-        },
-        error: function() {
-            Swal.fire({
-                title: 'Error!',
-                text: 'An error occurred while updating your image.',
-                icon: 'error'
             });
-        }
-    });
-});
-
-    // Handle image delete
-$('#deleteImageBtn').on('click', function() {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
+            // Handle image update
+        $('#updateImageBtn').on('click', function() {
+            $('#updateImageModal').modal('show');
+        });
+        $('#imageForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            var formData = new FormData(this);
             $.ajax({
                 type: 'POST',
-                url: '{% url "delete_image" %}', // Ensure this matches your URL pattern
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token
-                },
+                url: '{% url "update_image" %}', // Ensure this matches your URL pattern
+                data: formData,
+                processData: false,
+                contentType: false,
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
                         Swal.fire({
-                            title: 'Deleted!',
+                            title: 'Success!',
                             text: response.message,
                             icon: 'success'
                         }).then(() => {
@@ -266,15 +263,59 @@ $('#deleteImageBtn').on('click', function() {
                 error: function() {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'An error occurred while deleting the image.',
+                        text: 'An error occurred while updating your image.',
                         icon: 'error'
                     });
                 }
             });
-        }
-    });
-});
-});
-    </script>
+        });
 
+            // Handle image delete
+        $('#deleteImageBtn').on('click', function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url "delete_image" %}', // Ensure this matches your URL pattern
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: response.message,
+                                    icon: 'success'
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while deleting the image.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+        });
+    </script>
 {% endblock %}

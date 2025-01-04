@@ -54,11 +54,10 @@ class CustomAuthenticationForm(AuthenticationForm):
         'placeholder': 'Password',
         'id': 'floatingPassword',
     }))
-
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'email', 'phone', 'bio', 'website', 'gender'  ]
+        fields = ['first_name', 'last_name', 'phone', 'bio', 'website', 'gender'  ]
         widgets = {
             'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -69,11 +68,6 @@ class ProfileForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Last Name',
                 'id': 'floatingLastName',
-            }),
-            'email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Email',
-                'id': 'floatingEmail',
             }),
             'phone': forms.NumberInput(attrs={
                 'class': 'form-control',
