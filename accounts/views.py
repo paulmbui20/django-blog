@@ -18,6 +18,8 @@ from django.conf import settings
 
 from .models import CustomUser
 
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 def register(request):
     if request.method == "POST":
@@ -105,6 +107,16 @@ def update_email(request):
         new_email = request.POST.get("newemail")
         dbuser = get_object_or_404(CustomUser, email=old_email)
         useremail = request.user.email
+
+        # Validate email format
+        try:
+            validate_email(old_email)
+        except ValidationError:
+            return JsonResponse({"success": False, "message": "Old email is not a valid email address."})
+        try:
+            validate_email(new_email)
+        except ValidationError:
+            return JsonResponse({"success": False, "message": "New email is not a valid email address."})
 
         if old_email != useremail:
             return JsonResponse({"success": False, "message": "Old email is incorrect."})
@@ -202,6 +214,18 @@ def queries(request):
     else:
         messages.error(request, "You are not authorized to access this page.")
         return redirect('login')
+
+def mark_query_read(request):
+    if request.method == "POST":
+        query_id = request.POST.get('id')
+        try:
+            contact = Contact.objects.get(id=query_id)
+            contact.read = True
+            contact.save()
+            return JsonResponse({'success': True, 'message': 'Marked as read successfully!'})
+        except Contact.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'contact not found.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request.'})
 
 @login_required
 def delete_contact_query(request):

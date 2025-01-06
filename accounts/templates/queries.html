@@ -69,7 +69,8 @@
                                     data-date="{{ contact_query.date }}"
                                     data-time="{{ contact_query.time }}"
                                     data-isread="{{ contact_query.read }}"
-                                    data-priority="{{contact_query.priority}}">
+                                    data-priority="{{contact_query.priority}}"
+                                    data-id="{{ contact_query.pk }}">
                                     <i class="fa fa-eye"></i>
                                 </button>
                                 <button class="btn btn-outline-danger btn-sm delete-query" data-id="{{contact_query.pk}}"><i class="fa fa-trash"></i></button>
@@ -90,11 +91,12 @@
             $('#queriesTable').DataTable({
                 "searching": true,
                 "ordering": true,
-                "lengthChange": false,
-                "pageLength": 5,
+                "lengthChange": true,
+                "pageLength": 20,
                 "order": [[5, 'desc']],
                 {#responsive: true#}
             });
+                let currentQueryId;
 
             // Handle view query button click
             $('.view-query').click(function() {
@@ -107,6 +109,8 @@
                 const time = $(this).data('time');
                 const isread = $(this).data('isread');
                 const priority = $(this).data('priority');
+
+                currentQueryId = $(this).data('id'); // Store the current query ID
 
                 // Set modal content
                 $('#modalFName').text(fname);
@@ -123,7 +127,57 @@
                 $('#queryModal').modal('show');
             });
 
-            // Handle delete query button click
+// Highlight rows based on their "read" status when the page loads
+    $('#queriesTable tbody tr').each(function() {
+        const row = $(this);
+        const viewQueryButton = row.find('.view-query');
+        const isRead = viewQueryButton.data('isread'); // Dynamically fetch the isRead value
+
+        const readCell = row.find('td:nth-child(8)'); // "Read" column
+        if (isRead) {
+            readCell.removeClass('text-danger').addClass('text-success'); // Green text for "read"
+        } else {
+            readCell.removeClass('text-success').addClass('text-danger'); // Red text for "not read"
+        }
+    });
+
+    // Handle modal close to mark query as read
+    $('#queryModal').on('hidden.bs.modal', function() {
+        const viewQueryButton = $(`.view-query[data-id="${currentQueryId}"]`);
+        console.log(viewQueryButton.data('isread'))
+        const isRead = viewQueryButton.data('isread'); // Check the updated read status dynamically
+
+        if (!isRead) {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "mark_query_read" %}',
+                data: {
+                    id: currentQueryId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Update the corresponding table row
+                        const row = viewQueryButton.closest('tr');
+                        const readCell = row.find('td:nth-child(8)'); // "Read" column
+
+                        // Update the cell text and styling
+                        readCell.text('True').removeClass('text-danger').addClass('text-success');
+
+                        // Update the data attribute for future checks
+                        viewQueryButton.data('isread', true);
+                    }
+                },
+                error: function() {
+                    console.error('An error occurred while marking the query as read.');
+                }
+            });
+        }
+    });
+
+
+              // Handle delete query button click
             $('.delete-query').click(function() {
                 const queryId = $(this).data('id');
                 Swal.fire({

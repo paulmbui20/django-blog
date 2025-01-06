@@ -7,7 +7,7 @@ from blog import views
 from blog.views import add_post, update_post_status, add_category, analytics_dashboard
 from djangoBlog import settings
 from .views import register, account, logout_view, update_password, update_image, delete_image, profile, queries, \
-    delete_contact_query, update_email
+    delete_contact_query, update_email, mark_query_read
 from django.contrib.auth import views as auth_views
 
 
@@ -34,6 +34,8 @@ urlpatterns = [
     path('update_post_status/', update_post_status, name='update_post_status'),
 
     path('queries', queries, name='queries'),
+
+    path('mark_query_read/', mark_query_read, name='mark_query_read'),
 
     path('delete_contact_query/', delete_contact_query, name='delete_contact_query'),
 
