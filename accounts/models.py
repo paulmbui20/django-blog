@@ -1,3 +1,4 @@
+from allauth.socialaccount.models import SocialAccount
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.text import slugify
@@ -17,6 +18,18 @@ class CustomUser(AbstractUser):
         if self.username:
             self.slug = slugify(self.username)
         super().save(*args, **kwargs)
+
+    @property
+    def is_social_user(self):
+        """
+        Checks if the user signed up using a social provider.
+        """
+        try:
+            # Check if a SocialAccount exists for the user
+            SocialAccount.objects.get(user=self)
+            return True
+        except SocialAccount.DoesNotExist:
+            return False
 
     def __str__(self):
         return self.username
