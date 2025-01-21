@@ -12,6 +12,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ftp.paulmbui.co.ke
-        username: ${{ secrets.ftp_usernane }}
+        username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: /djangoblog.paulmbui.co.ke/
