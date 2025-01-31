@@ -86,39 +86,35 @@ def BlogPostDetailView(request, slug):
     return render(request, 'blogpost_detail.html', context)
 
 def commentform(request, slug):
-        if request.method == 'POST':
-            form = CommentForm(request.POST)
-            form_email = request.POST.get('email')
-            user1 = get_object_or_404(CustomUser, email=form_email)
+    if request.method != 'POST':
+        raise Http404("Invalid request method")
 
-            if user1:
-                if request.user.is_authenticated:
-                    if form_email != request.user.email:
-                        messages.error(request, 'Email address does not match')
-                        return redirect('blogpost_detail', slug=slug)
-                    elif form.is_valid():
-                        comment = form.save(commit=False)
-                        comment.author = request.user
-                        comment.save()
-                        form.save_m2m()
-                        messages.success(request, 'Your comment has been submitted')
-                        return redirect('blogpost_detail', slug=slug)
-                    else:
-                        messages.error(request, 'Invalid input')
-                        return redirect('blogpost_detail', slug=slug)
-                else:
-                    messages.info(request, 'You have an existing Account, please login to continue')
-                    return redirect('login')
-            else:
-                if form.is_valid():
-                    form.save()
-                    messages.success(request, 'Comment successfully saved')
-                    return redirect('blogpost_detail', slug=slug)
-                else:
-                    messages.error(request, 'Please check your input')
-                    return redirect('blogpost_detail', slug=slug)
+    form = CommentForm(request.POST)
+    form_email = request.POST.get('email')
+
+    if request.user.is_authenticated:
+        if form_email != request.user.email:
+            messages.error(request, 'Email address does not match.')
+            return redirect('blogpost_detail', slug=slug)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.save()
+            messages.success(request, 'Your comment has been submitted.')
         else:
-            messages.error(request, 'Error')
+            messages.error(request, 'Invalid input, please check your form.')
+    else:
+        user1 = CustomUser.objects.filter(email=form_email).first()
+        if user1:
+            messages.info(request, 'You have an existing account, please log in to continue.')
+            return redirect('login')
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Comment successfully saved.')
+        else:
+            messages.error(request, 'Please check your input.')
+
+    return redirect('blogpost_detail', slug=slug)
 
 def deletecomment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
