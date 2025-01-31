@@ -1,0 +1,48 @@
+.errorlist{
+    color: #dc3545;
+}
+[data-bs-theme='dark'] {
+    background-color: #121212;
+    color: #e4e4e4;
+}
+
+[data-bs-theme='dark'] .card {
+    background-color: #1e1e1e;
+    border: none;
+}
+[data-bs-theme='dark'] .navbar, [data-bs-theme='dark'] .btn-primary {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Style for the floating button */
+ .scroll-to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  z-index: 1000;
+}
+ .sticky-top{
+     z-index: 1;!important;
+ }
+
+ [data-bs-theme=dark] .carousel .carousel-control-next-icon,
+ [data-bs-theme=dark] .carousel .carousel-control-prev-icon,
+ [data-bs-theme=dark].carousel .carousel-control-next-icon,
+ [data-bs-theme=dark].carousel .carousel-control-prev-icon {
+     filter:;
+}
+ [data-bs-theme=dark] .carousel .carousel-indicators [data-bs-target], [data-bs-theme=dark].carousel .carousel-indicators [data-bs-target] {
+     background-color: #fff;
+}
+/* .toast-success{background-color: #0af60a*/
+/*}*/
+/*.toast-error{background-color: #f82217*/
+/*}*/
+/*.toast-info{background-color: #3dc4ea*/
+/*}*/
+/*.toast-warning{background-color: #ffae00*/
+/*}*/
