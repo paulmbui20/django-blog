@@ -232,4 +232,3 @@ CKEDITOR_5_CONFIGS = {
     }
 }
 
-

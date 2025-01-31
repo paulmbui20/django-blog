@@ -7,7 +7,7 @@ backup.json
 # Backup files #
 *.bak
 db.sqlite3
-
+media/
 # If you are using PyCharm #
 # User-specific stuff
 .idea/**/workspace.xml
