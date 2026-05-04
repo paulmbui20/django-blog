@@ -54,6 +54,8 @@ class CustomAuthenticationForm(AuthenticationForm):
         'placeholder': 'Password',
         'id': 'floatingPassword',
     }))
+
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser

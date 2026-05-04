@@ -14,4 +14,4 @@ jobs:
         server: ftp.paulmbui.co.ke
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: /djangoblog.paulmbui.co.ke/
+        server-dir: /domains/djangoblog.paulmbui.co.ke/public_html

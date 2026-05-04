@@ -1,25 +1,21 @@
 import os
+from datetime import datetime, timedelta
 
+import jwt
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import logout
 from django.contrib.auth import update_session_auth_hash, login, authenticate, get_backends
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.http import JsonResponse
-
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 
 from blog.models import BlogPost, Contact
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm
-
-import jwt
-from datetime import datetime, timedelta
-from django.conf import settings
-
 from .models import CustomUser
 
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 
 def register(request):
     if request.method == "POST":
