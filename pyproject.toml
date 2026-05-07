@@ -3,12 +3,12 @@ name = "django-blog-prod"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "asgiref==3.8.1",
     "cachetools==5.5.0",
     "certifi==2024.8.30",
-    "cffi>=2.0.0",
+    "cffi==2.0.0",
     "charset-normalizer==3.4.0",
     "cryptography==44.0.0",
     "django==5.2.2",
@@ -28,11 +28,11 @@ dependencies = [
     "mysqlclient==2.2.6",
     "packaging==24.2",
     "phonenumbers==8.13.51",
-    "pillow>=12.2.0",
+    "pillow==12.2.0",
     "proto-plus==1.25.0",
     "protobuf==5.29.1",
     "psycopg==3.2.3",
-    "psycopg-binary>=3.3.4",
+    "psycopg-binary==3.3.4",
     "pyasn1==0.6.1",
     "pyasn1-modules==0.4.1",
     "pycparser==2.22",
@@ -43,6 +43,7 @@ dependencies = [
     "rsa==4.9",
     "six==1.17.0",
     "soupsieve==2.6",
+    "sqlparse==0.5.5",
     "tzdata==2024.2",
     "uritemplate==4.1.1",
     "urllib3==2.2.3",
